@@ -6,8 +6,8 @@ This directory specially used to archiving '.config' file.
 
 usage:
 
-'cp ./config ../'
-'make menuconfig'
+    cp ./config ../
+    make menuconfig
 
 notice:
 -------------
