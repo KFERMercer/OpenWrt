@@ -6,10 +6,10 @@ This directory specially used to archiving `.config` file.
 
 usage:
 
-    first
-    `cp ./config ../`
-    then
-    `make menuconfig`
+first<br>
+`cp ./config ../`<br>
+then<br>
+`make menuconfig`<br>
 
 notice:
 --
