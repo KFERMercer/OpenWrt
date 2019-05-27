@@ -1,17 +1,14 @@
-makeconfig.d
-==
+# makeconfig.d
 
-This directory specially used to archiving `.config` file.
---
+## This directory specially used to archiving `.config` file.
 
-usage:
+### usage:
 
-first<br>
-`cp ./config ../`<br>
-then<br>
-`make menuconfig`<br>
+first\
+`cp ./config ../`\
+then\
+`make menuconfig`
 
-notice:
---
+### notice:
 
 only support target x86_64 and kernel version 4.19.
