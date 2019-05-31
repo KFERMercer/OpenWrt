@@ -15,6 +15,7 @@
 /files
 /overlay
 /package/feeds
+/package/magic
 key-build*
 *.orig
 *.rej
