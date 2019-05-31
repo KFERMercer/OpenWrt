@@ -5,9 +5,9 @@
 ### usage:
 
 first\
-`cp ./config ../`\
+`cp ./x86_64.config ../.config`\
 then\
-`make menuconfig`
+`make V=s`
 
 ### notice:
 
