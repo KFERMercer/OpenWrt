@@ -1,10 +1,16 @@
 # Mercer's Openwrt source
-The original codes built by OpenWrt project,\
-other core codes comes from coolsnowwolf,\
-for this, I am pay tribute to them.
+The original codes built by OpenWrt project, \
+other core codes comes from coolsnowwolf. \
+For this, I am sincerely pay tribute to them.
 
 ## Notes:
-To build your firmware, you need to have installed necessary packages.\
+
+To build your own firmware you need to have access to a Linux, BSD or MacOSX system\
+(case-sensitive filesystem required). Cygwin will not be supported because of\
+the lack of case sensitiveness in the file system.
+
+Also, you need to have installed necessary packages.\
+For example, in Debian: \
 running\
 `sudo apt-get update`\
 then\
@@ -20,7 +26,3 @@ Use `make menuconfig` to configure your image.
 Simply running `make -j1 V=s` will build your firmware.\
 It will download all sources, build the cross-compile toolchain, \
 the kernel and all choosen applications.
-
-To build your own firmware you need to have access to a Linux, BSD or MacOSX system\
-(case-sensitive filesystem required). Cygwin will not be supported because of\
-the lack of case sensitiveness in the file system.
