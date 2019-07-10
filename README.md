@@ -1,7 +1,7 @@
 # Mercer's Openwrt source
-The original codes built by OpenWrt project, \
-other core codes comes from coolsnowwolf. \
-For this, I am sincerely pay tribute to them.
+
+This project is my own used router firmware, \
+made some improvements based on the original project.
 
 ## Notes:
 
@@ -26,3 +26,9 @@ Use `make menuconfig` to configure your image.
 Simply running `make -j1 V=s` will build your firmware.\
 It will download all sources, build the cross-compile toolchain, \
 the kernel and all choosen applications.
+
+## Acknowledgements:
+
+The original codes built by [OpenWrt Project](https://openwrt.org), \
+other core codes comes from [coolsnowwolf](https://github.com/coolsnowwolf/lede). \
+For this, I am sincerely pay tribute to them.
