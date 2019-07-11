@@ -1,13 +1,14 @@
 # Mercer's Openwrt source
 
-This project is my own used router firmware, \
+This repositories is a router firmware that my own using. \
 made some improvements based on the original project.
 
 ## Notes:
 
-To build your own firmware you need to have access to a Linux, BSD or MacOSX system\
-(case-sensitive filesystem required). Cygwin will not be supported because of\
-the lack of case sensitiveness in the file system.
+To build your own firmware, you need to have access to a\
+Linux, BSD or MacOSX system (case-sensitive filesystem required). \
+Cygwin will not be supported because of the lack of\
+case sensitiveness in the file system.
 
 Also, you need to have installed necessary packages.\
 For example, in Debian: \
@@ -16,8 +17,8 @@ running\
 then\
 `sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint`
 
-Run `./scripts/feeds update -a` to get all the latest package definitions\
-defined in feeds.conf / feeds.conf.default respectively\
+Run `./scripts/feeds update -a` to get all the latest package definitions, \
+defined in feeds.conf / feeds.conf.default respectively, \
 and `./scripts/feeds install -a` to install symlinks of all of them into\
 package/feeds/.
 
