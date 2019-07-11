@@ -40,8 +40,8 @@ msgstr "捕获结果"
 msgid "Capture file"
 msgstr "文件名"
 
-msgid "date"
-msgstr "修改日期"
+msgid "Modification date"
+msgstr "停止时间"
 
 msgid "Capture size"
 msgstr "文件大小"
