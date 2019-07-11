@@ -2,16 +2,16 @@ msgid "Tcpdump"
 msgstr "Tcpdump 流量监控"
 
 msgid "Start network capture"
-msgstr "开始网络抓取"
+msgstr "Tcpdump 流量监控"
 
 msgid "Interface"
-msgstr "接口"
+msgstr "捕获指定的接口"
 
 msgid "seconds, packets"
-msgstr "秒, 数据包"
+msgstr "捕获限制"
 
 msgid "Filter"
-msgstr "过滤器"
+msgstr "过滤"
 
 msgid "Actions"
 msgstr "操作"
@@ -23,7 +23,7 @@ msgid "timeout, bytes, seconds"
 msgstr "超时, 字节, 秒"
 
 msgid "seconds"
-msgstr "秒数"
+msgstr "秒"
 
 msgid "packets"
 msgstr "数据包"
@@ -35,28 +35,31 @@ msgid "Output"
 msgstr "输出"
 
 msgid "Capture links"
-msgstr "抓取链接"
+msgstr "捕获结果"
 
 msgid "Capture file"
-msgstr "抓取文件"
+msgstr "文件名"
 
-msgid "Modification date"
+msgid "date"
 msgstr "修改日期"
 
 msgid "Capture size"
-msgstr "抓取大小"
+msgstr "文件大小"
 
 msgid "Start capture"
-msgstr "开始抓取"
+msgstr "开始捕获"
 
 msgid "Stop capture"
-msgstr "停止抓取"
+msgstr "停止捕获"
 
-msgid "Capture"
-msgstr "抓取"
+msgid "pcap file"
+msgstr ".pcap文件"
+
+msgid "filter file"
+msgstr ".filter文件"
 
 msgid "Remove"
-msgstr "移除"
+msgstr "删除"
 
 msgid "All files"
 msgstr "所有文件"
@@ -65,40 +68,40 @@ msgid "Download"
 msgstr "下载"
 
 msgid "Interface name is null or blank."
-msgstr "接口名为空."
+msgstr "请指定要捕获的接口."
 
 msgid "Interface does not exist or is not valid."
 msgstr "接口不存在或无效."
 
 msgid "Capture length parameter must be a number."
-msgstr "抓取长度参数必须是数字."
+msgstr "捕获长度参数必须是数字."
 
 msgid "Capture unit is null or blank."
-msgstr "抓取单位为空或空白."
+msgstr "捕获单位为空或空白."
 
 msgid "Capture unit must be Time(T) or packet(P)."
-msgstr "抓取单位必须是时间(T)或包(P)."
+msgstr "捕获单位必须是时间(T)或包(P)."
 
 msgid "Previous capture is still ongoing!"
-msgstr "先前的抓取未停止!"
+msgstr "先前的捕获未停止!"
 
 msgid "Capture in progress.."
-msgstr "正在抓取..."
+msgstr "正在捕获..."
 
 msgid "Capture has been terminated"
-msgstr "抓取已被终止"
+msgstr "捕获已被终止"
 
 msgid "There was not active capture!"
-msgstr "抓取活动未运行!"
+msgstr "捕获活动未运行!"
 
 msgid "Process seems to be dead, removing pid file!"
 msgstr "进程失去响应, 正在删除pid文件!"
 
 msgid "No capture in progress"
-msgstr "没有正在进行的抓取"
+msgstr "没有正在进行的捕获"
 
 msgid "Could not retrieve captures."
-msgstr "无法检索抓取."
+msgstr "无法检索捕获."
 
 msgid "There are no captures available yet."
-msgstr "目前没有可用的抓取."
+msgstr "目前没有可用的捕获."

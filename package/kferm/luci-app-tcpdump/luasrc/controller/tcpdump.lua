@@ -4,6 +4,8 @@ LuCI - Lua Configuration Interface
 
 Copyright 2013-2014 Diego Manas <diegomanas.dev@gmail.com>
 
+Copyright (C) 2019, KFERMercer <iMercer@yeah.net>
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -12,9 +14,9 @@ You may obtain a copy of the License at
 
 $Id$
 
-2019-07-11
+2019-07-12  modified by KFERMercer <iMercer@yeah.com>:
+	format code
 
-modified by KFERMercer <iMercer@yeah.com>: format code.
 ]] --
 module("luci.controller.tcpdump", package.seeall)
 
