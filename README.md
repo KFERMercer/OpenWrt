@@ -1,6 +1,6 @@
 # Mercer's Openwrt source
 
-This repositories is a router firmware that my own using. \
+This repository is a router firmware that my own using. \
 made some improvements based on the original project.
 
 ## Notes:
@@ -31,5 +31,5 @@ the kernel and all choosen applications.
 ## Acknowledgements:
 
 The original codes built by [OpenWrt Project](https://openwrt.org), \
-other core codes comes from [coolsnowwolf](https://github.com/coolsnowwolf/lede). \
+other core codes comes from [coolsnowwolf](https://github.com/coolsnowwolf). \
 For this, I am sincerely pay tribute to them.
