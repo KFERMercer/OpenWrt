@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=LuCI support for tcpdump interfice
+LUCI_TITLE:=LuCI support for tcpdump
 LUCI_DEPENDS:=+tcpdump
 LUCI_PKGARCH:=all
 PKG_NAME:=luci-app-tcpdump
