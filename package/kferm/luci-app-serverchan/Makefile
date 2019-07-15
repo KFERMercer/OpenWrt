@@ -16,8 +16,8 @@ include $(TOPDIR)/feeds/luci/luci.mk
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-chmod +X /etc/init.d/serverchan
-chmod +X /usr/bin/serverchan/serverchan
+chmod 755 /etc/init.d/serverchan >/dev/null 2>&1
+chmod 755 /usr/bin/serverchan/serverchan >/dev/null 2>&1
 /etc/init.d/serverchan enable >/dev/null 2>&1
 exit 0
 endef
