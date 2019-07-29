@@ -1,4 +1,4 @@
-# Mercer's Openwrt source
+# Mercer's OpenWrt source
 
 This repository is a router firmware that my own using. \
 I'm already made some improvements based on the original project.
