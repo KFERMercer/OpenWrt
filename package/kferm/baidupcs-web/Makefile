@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015-2016 OpenWrt.org
+# Copyright (C) 2019 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v3.
 #
@@ -7,21 +7,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=baidupcs-web
-PKG_VERSION:=v3.6.7
-PKG_RELEASE:=1
+PKG_VERSION:=3.6.7
+PKG_RELEASE:=2
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=baidupcs-web is a web controller for BaiduPCS-Go
+	TITLE:=BaiduPCS-Web is a web controller for BaiduPCS-Go
 	URL:=https://github.com/liuzhuoling2011/baidupcs-web
 endef
 
 
 define Package/$(PKG_NAME)/description
-baidupcs-web is a web controller for BaiduPCS-Go
+BaiduPCS-Web is a web controller for BaiduPCS-Go
 endef
 
 BAIDUPCS-WEB_BIN:=BaiduPCS-Go
@@ -29,6 +29,7 @@ BAIDUPCS-WEB_BIN:=BaiduPCS-Go
 ifeq ($(ARCH),x86_64)
 	PKG_ARCH_BAIDUPCS-WEB:=amd64
 endif
+
 ifeq ($(ARCH),mipsel)
 	PKG_ARCH_BAIDUPCS-WEB:=mipsel
 endif
@@ -36,6 +37,7 @@ endif
 ifeq ($(ARCH),i386)
 	PKG_ARCH_BAIDUPCS-WEB:=i386
 endif
+
 ifeq ($(ARCH),arm)
 	PKG_ARCH_BAIDUPCS-WEB:=arm
 endif
@@ -55,7 +57,15 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
+#	$(INSTALL_BIN) ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
+
+#    tar cvf $(1)/usr/bin/baidupcs-web.tar -C ./files/$(PKG_ARCH_BAIDUPCS-WEB)/ $(BAIDUPCS-WEB_BIN)
+#	tar xvf $(1)/usr/bin/baidupcs-web.tar -C $(1)/usr/bin/
+#	mv $(1)/usr/bin/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
+#	chmod 755 $(1)/usr/bin/baidupcs-web
+#	rm -f $(1)/usr/bin/baidupcs-web.tar
+	upx -o $(1)/usr/bin/baidupcs-web ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN)
+	chmod 755 $(1)/usr/bin/baidupcs-web
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
