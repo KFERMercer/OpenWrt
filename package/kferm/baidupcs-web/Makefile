@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=baidupcs-web
 PKG_VERSION:=3.6.7
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,10 +24,13 @@ define Package/$(PKG_NAME)/description
 BaiduPCS-Web is a web controller for BaiduPCS-Go
 endef
 
+#禁止OpenWrt 对二进制文件进行strip
+STRIP:=true
+
 BAIDUPCS-WEB_BIN:=BaiduPCS-Go
 
 ifeq ($(ARCH),x86_64)
-	PKG_ARCH_BAIDUPCS-WEB:=amd64
+	PKG_ARCH_BAIDUPCS-WEB:=x86_64
 endif
 
 ifeq ($(ARCH),mipsel)
@@ -46,6 +49,10 @@ ifeq ($(ARCH),arm64)
 	PKG_ARCH_BAIDUPCS-WEB:=arm64
 endif
 
+ifeq ($(ARCH),aarch64)
+	PKG_ARCH_BAIDUPCS-WEB:=arm64
+endif
+
 define Build/Prepare
 endef
 
@@ -57,15 +64,17 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-#	$(INSTALL_BIN) ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
+	$(INSTALL_BIN) ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
+	chmod 755 $(1)/usr/bin/baidupcs-web
 
-#    tar cvf $(1)/usr/bin/baidupcs-web.tar -C ./files/$(PKG_ARCH_BAIDUPCS-WEB)/ $(BAIDUPCS-WEB_BIN)
+#以下无用
+#	tar cvf $(1)/usr/bin/baidupcs-web.tar -C ./files/$(PKG_ARCH_BAIDUPCS-WEB)/ $(BAIDUPCS-WEB_BIN)
 #	tar xvf $(1)/usr/bin/baidupcs-web.tar -C $(1)/usr/bin/
 #	mv $(1)/usr/bin/$(BAIDUPCS-WEB_BIN) $(1)/usr/bin/baidupcs-web
 #	chmod 755 $(1)/usr/bin/baidupcs-web
 #	rm -f $(1)/usr/bin/baidupcs-web.tar
-	upx -o $(1)/usr/bin/baidupcs-web ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN)
-	chmod 755 $(1)/usr/bin/baidupcs-web
+#	upx -o $(1)/usr/bin/baidupcs-web ./files/$(PKG_ARCH_BAIDUPCS-WEB)/$(BAIDUPCS-WEB_BIN)
+
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
