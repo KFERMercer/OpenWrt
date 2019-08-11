@@ -54,7 +54,7 @@ endif
 BAIDUPCS-WEB_ZIP_NAME:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
 PKG_SOURCE:=$(BAIDUPCS-WEB_ZIP_NAME).zip
 PKG_SOURCE_URL:=https://github.com/liuzhuoling2011/baidupcs-web/releases/download/$(PKG_VERSION)/
-UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-unzip/$(PKG_ARCH_BAIDUPCS-WEB)
+UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-unzip/$(PKG_ARCH_BAIDUPCS-WEB)
 PKG_HASH:=skip
 
 define Build/Prepare
