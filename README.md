@@ -1,5 +1,12 @@
 # Mercer's OpenWrt source
 
+[![Release](https://img.shields.io/github/release/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/releases)
+[![Repo size](https://img.shields.io/github/repo-size/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/archive/master.tar.gz)
+[![Contributors](https://img.shields.io/github/contributors/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/graphs/contributors)
+[![Last commit](https://img.shields.io/github/last-commit/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/commits/master)
+
+---
+
 This repository is a router firmware that my own using. \
 I'm already made some improvements based on the original project.
 
