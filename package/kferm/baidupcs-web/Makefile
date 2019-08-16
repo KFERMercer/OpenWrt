@@ -1,14 +1,16 @@
 #
 # Copyright (C) 2019 OpenWrt.org
 #
+# KFERMercer <KFER.Mercer@gmail.com>
+#
 # This is free software, licensed under the GNU General Public License v3.
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=baidupcs-web
-PKG_VERSION:=3.6.7
-PKG_RELEASE:=4
+PKG_VERSION:=3.6.8
+PKG_RELEASE:=5
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,7 +26,7 @@ define Package/$(PKG_NAME)/description
 BaiduPCS-Web is a web controller for BaiduPCS-Go
 endef
 
-#禁止OpenWrt对二进制文件进行strip
+# 禁止OpenWrt对二进制文件进行strip
 STRIP:=true
 
 ifeq ($(ARCH),x86_64)
@@ -52,9 +54,13 @@ ifeq ($(ARCH),aarch64)
 endif
 
 BAIDUPCS-WEB_ZIP_NAME:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
+
 PKG_SOURCE:=$(BAIDUPCS-WEB_ZIP_NAME).zip
+
 PKG_SOURCE_URL:=https://github.com/liuzhuoling2011/baidupcs-web/releases/download/$(PKG_VERSION)/
+
 UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-unzip/$(PKG_ARCH_BAIDUPCS-WEB)
+
 PKG_HASH:=skip
 
 define Build/Prepare
