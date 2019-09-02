@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=baidupcs-web
 PKG_VERSION:=3.6.8
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -29,6 +29,10 @@ endef
 # 禁止OpenWrt对二进制文件进行strip
 STRIP:=true
 
+ifeq ($(ARCH),i386)
+	PKG_ARCH_BAIDUPCS-WEB:=86
+endif
+
 ifeq ($(ARCH),x86_64)
 	PKG_ARCH_BAIDUPCS-WEB:=amd64
 endif
@@ -37,8 +41,8 @@ ifeq ($(ARCH),mipsel)
 	PKG_ARCH_BAIDUPCS-WEB:=mipsle
 endif
 
-ifeq ($(ARCH),i386)
-	PKG_ARCH_BAIDUPCS-WEB:=86
+ifeq ($(ARCH),mips)
+	PKG_ARCH_BAIDUPCS-WEB:=mipsle
 endif
 
 ifeq ($(ARCH),arm)
@@ -53,19 +57,18 @@ ifeq ($(ARCH),aarch64)
 	PKG_ARCH_BAIDUPCS-WEB:=arm64
 endif
 
-BAIDUPCS-WEB_ZIP_NAME:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
 
-PKG_SOURCE:=$(BAIDUPCS-WEB_ZIP_NAME).zip
+PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).zip
 
 PKG_SOURCE_URL:=https://github.com/liuzhuoling2011/baidupcs-web/releases/download/$(PKG_VERSION)/
 
-UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-unzip/$(PKG_ARCH_BAIDUPCS-WEB)
+UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-unzip
 
 PKG_HASH:=skip
 
 define Build/Prepare
 	mkdir -vp $(UNZIP_DIR)
-	unzip -od $(UNZIP_DIR) $(DL_DIR)/$(BAIDUPCS-WEB_ZIP_NAME).zip
+	unzip -od $(UNZIP_DIR) $(DL_DIR)/$(PKG_SOURCE)
 endef
 
 define Build/Configure
@@ -76,7 +79,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(UNZIP_DIR)/$(BAIDUPCS-WEB_ZIP_NAME)/BaiduPCS-Go $(1)/usr/bin/$(PKG_NAME)
+	$(INSTALL_BIN) $(UNZIP_DIR)/*/BaiduPCS-Go $(1)/usr/bin/$(PKG_NAME)
 	chmod 755 $(1)/usr/bin/$(PKG_NAME)
 endef
 
