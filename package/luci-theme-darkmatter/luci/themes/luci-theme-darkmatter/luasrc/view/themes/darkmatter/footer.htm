@@ -29,17 +29,18 @@
 	local category = request[1]
 	local tree = disp.node()
 %>
-                </div>
-                <footer class="mobile-hide">
-                </footer>
-            </div>
-        </div>
+</div>
+<footer class="mobile-hide">
+</footer>
+</div>
+</div>
 
-    <script>
-        // thanks for Jo-Philipp Wich <jow@openwrt.org>
-        var luciLocation = <%= luci.http.write_json(luci.dispatcher.context.path) %>;
-    </script>
-    <script src="<%=media%>/js/jquery.min.js"></script>
-    <script src="<%=media%>/js/script.js"></script>
+<script>
+    // thanks for Jo-Philipp Wich <jow@openwrt.org>
+    var luciLocation = <%= luci.http.write_json(luci.dispatcher.context.path) %>;
+</script>
+<script src="<%=media%>/js/jquery.min.js"></script>
+<script src="<%=media%>/js/script.js"></script>
 </body>
+
 </html>
