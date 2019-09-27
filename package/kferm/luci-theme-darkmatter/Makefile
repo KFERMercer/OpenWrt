@@ -25,6 +25,6 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=Darkmatter Theme
 LUCI_DEPENDS:=
 
-include ../../luci.mk
+include $(TOPDIR)/feeds/luci/luci.mk
 
 # call BuildPackage - OpenWrt buildroot signature
