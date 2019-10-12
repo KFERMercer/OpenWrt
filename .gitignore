@@ -3,8 +3,7 @@
 .*.swp
 /env
 /dl
-/.config
-/.config.old
+/.config*
 /bin
 /build_dir
 /staging_dir
@@ -25,4 +24,5 @@ key-build*
 .emacs.desktop*
 TAGS*~
 git-src
-.git-credentials
+.project
+.cproject
