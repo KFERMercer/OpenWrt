@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 LUCI_TITLE:=Luci for Docker-CE
-LUCI_DEPENDS:=+docker-ce
+LUCI_DEPENDS:=+docker-ce +procps-ng +procps-ng-ps
 LUCI_PKGARCH:=all
 PKG_VERSION:=1
 PKG_RELEASE:=7
