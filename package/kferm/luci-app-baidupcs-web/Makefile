@@ -6,12 +6,12 @@
 
 include $(TOPDIR)/rules.mk
 
+PKG_NAME:=luci-app-baidupcs-web
 LUCI_TITLE:=LuCI support for BaiduPCS-Go
 LUCI_DEPENDS:=+baidupcs-web +wget +openssl-util
 LUCI_PKGARCH:=all
-PKG_NAME:=luci-app-baidupcs-web
-PKG_RELEASE:=2
-PKG_MAINTAINER:=<https://github.com/KFERMercer/luci-app-baidupcs-web>
+PKG_VERSION:=1.0
+PKG_RELEASE:=3
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

@@ -1,6 +1,6 @@
 require("luci.sys")
 require("luci.util")
-require("luci.model.ipkg")
+
 local fs  = require "nixio.fs"
 
 local uci = require "luci.model.uci".cursor()
@@ -39,8 +39,8 @@ o.datatype    = "port"
 o.rmempty     = false
 
 o = s:option(Value, "dl_dir", translate("下载目录"))
-o.placeholder = "/etc/baidupcsweb-download"
-o.default     = "/etc/baidupcsweb-download"
+o.placeholder = "/opt/baidupcsweb-download"
+o.default     = "/opt/baidupcsweb-download"
 o.rmempty     = false
 
 return m
