@@ -29,7 +29,7 @@ Run
 ./scripts/feeds update -a
 ```
 
-to get all the latest package definitions, defined in feeds.conf or feeds.conf.default respectively
+to get all the latest package definitions, defined in `/feeds.conf` or `/feeds.conf.default` respectively;
 
 ```shell
 ./scripts/feeds install -a
