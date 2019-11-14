@@ -265,7 +265,7 @@ define Build/Compile
 	mv -f $(GO_PKG_BUILD_BIN_DIR)/main $(GO_PKG_BUILD_BIN_DIR)/v2ray
 
 ifeq ($(CONFIG_V2RAY_COMPRESS_UPX),y)
-	upx --ultra-brute $(GO_PKG_BUILD_BIN_DIR)/v2ray
+	upx $(GO_PKG_BUILD_BIN_DIR)/v2ray
 endif
 
 ifneq ($(CONFIG_V2RAY_EXCLUDE_V2CTL),y)
@@ -274,14 +274,12 @@ ifneq ($(CONFIG_V2RAY_EXCLUDE_V2CTL),y)
 	mv -f $(GO_PKG_BUILD_BIN_DIR)/main $(GO_PKG_BUILD_BIN_DIR)/v2ctl
 
 ifeq ($(CONFIG_V2RAY_COMPRESS_UPX),y)
-	upx --ultra-brute $(GO_PKG_BUILD_BIN_DIR)/v2ctl
+	upx $(GO_PKG_BUILD_BIN_DIR)/v2ctl
 endif
 endif
 endef
 
 define Package/v2ray/install
-	$(call GoPackage/Package/Install/Bin,$(PKG_INSTALL_DIR))
-
 	$(INSTALL_DIR) $(1)/usr/bin/v2ray
 
 	$(INSTALL_BIN) $(GO_PKG_BUILD_BIN_DIR)/v2ray $(1)/usr/bin/v2ray
@@ -293,7 +291,7 @@ endif
 ifneq ($(CONFIG_V2RAY_EXCLUDE_ASSETS),y)
 	$(INSTALL_DATA) \
 		$(PKG_BUILD_DIR)/release/config/{geoip,geosite}.dat \
-		$(1)/usr/bin
+		$(1)/usr/bin/v2ray
 endif
 endef
 
