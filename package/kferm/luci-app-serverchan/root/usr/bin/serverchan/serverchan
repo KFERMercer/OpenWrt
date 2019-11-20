@@ -756,7 +756,7 @@ function rand_geturl(){
 		#温度状态报警
 		if [ ! -z "$temperature_enable" ] && [ "$temperature_enable" -eq "1" ] ; then
 			if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"` 【温度】正在检测 CPU 温度" >> ${logfile};fi
-			cpu_wendu=`cut -c1-2 /sys/class/thermal/thermal_zone0/temp`
+			cpu_wendu=`cut -c1-2 /sys/class/thermal/thermal_zone1/temp`
 			temperature=`uci get serverchan.serverchan.temperature`>/dev/null 2>&1
 			if [ ! -z "$temperature" ] && [ "$cpu_wendu" -gt "$temperature" ] ; then
 				Temperature_n=$(($Temperature_n+1))
