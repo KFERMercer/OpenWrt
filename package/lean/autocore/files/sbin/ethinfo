@@ -2,7 +2,7 @@
 
 info()
 {	#获取网络接口数量
-	a=$(ifconfig -a | grep 'eth' | sort -u | wc -l)
+	a=$(ifconfig -a | grep '^eth' | sort -u | wc -l)
 
 	#获取网络接口状态
 	b=$(ethtool eth$1 | grep 'detected' | cut -f2 -d: | uniq)
@@ -16,7 +16,7 @@ info()
 	d=$(ethtool eth$1 | grep 'Speed' | cut -f2 -d: | uniq)
 
 	#获取网络双工状态
-	e=$(ethtool eth$1 | grep 'Duplex' | cut -f2 -d: | uniq)
+	e=$(ethtool eth$1 | grep 'Duplex' | cut -f2 -d: | cut -f1 -d! | uniq)
 	if [ $e = Full ]; then
 	f=1
 	else
