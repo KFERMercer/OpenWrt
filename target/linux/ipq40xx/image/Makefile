@@ -89,7 +89,7 @@ define Device/asus_rt-ac58u
 	KERNEL_INITRAMFS := $$(KERNEL) | uImage none
 	KERNEL_INITRAMFS_SUFFIX := -factory.trx
 	IMAGES := sysupgrade.bin
-	DEVICE_PACKAGES := kmod-usb-ledtrig-usbport -kmod-ath10k-ct -ath10k-firmware-qca4019-ct kmod-ath10k ath10k-firmware-qca4019
+	DEVICE_PACKAGES := kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += asus_rt-ac58u
 
@@ -281,7 +281,7 @@ define Device/p2w_r619ac
 	$(call Device/UbiFit)
 	DEVICE_VENDOR := P&W
 	DEVICE_MODEL := R619AC
-	DEVICE_DTS := qcom-ipq4019-p2w-r619ac
+	DEVICE_DTS := qcom-ipq4019-r619ac
 	DEVICE_DTS_CONFIG := config@10
 	BLOCKSIZE := 128k
 	PAGESIZE := 2048
@@ -297,7 +297,7 @@ define Device/p2w_r619ac-128m
 	DEVICE_VENDOR := P&W
 	DEVICE_MODEL := R619AC
 	DEVICE_VARIANT := 128M
-	DEVICE_DTS := qcom-ipq4019-p2w-r619ac-128m
+	DEVICE_DTS := qcom-ipq4019-r619ac-128m
 	DEVICE_DTS_CONFIG := config@10
 	BLOCKSIZE := 128k
 	PAGESIZE := 2048
@@ -327,6 +327,7 @@ define Device/hugo_ac1200
         IMAGE_SIZE := 31232k
         IMAGES := sysupgrade.bin
         IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata
+	DEVICE_PACKAGES := ipq-wifi-hugo_ac1200
 endef
 TARGET_DEVICES += hugo_ac1200
 
