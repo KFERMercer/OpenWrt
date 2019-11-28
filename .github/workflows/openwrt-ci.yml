@@ -4,19 +4,16 @@
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
 # 
+# <https://github.com/KFERMercer/OpenWrt-CI>
+#
 
 name: OpenWrt-CI
 
 on:
-  push:
-    branches: 
-      - master
   schedule:
     - cron: 0 20 * * *
-  # release:
-  #   types: [published]
-  # watch:
-  #   types: [started]
+  # branches: 
+  #   - master
 
 jobs:
   build:
