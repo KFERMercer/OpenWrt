@@ -3,7 +3,7 @@ menu "V2Ray Configuration"
 
 choice
 	prompt "JSON Config Support"
-	default V2RAY_JSON_NONE
+	default V2RAY_JSON_INTERNAL
 
 	config V2RAY_JSON_V2CTL
 		bool "Load JSON from V2Ctl"
