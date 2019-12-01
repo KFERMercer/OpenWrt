@@ -1,6 +1,6 @@
 # Mercer's OpenWrt source
 
-## [![Release](https://img.shields.io/github/release/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/releases) [![Repo size](https://img.shields.io/github/repo-size/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/archive/master.tar.gz) [![Contributors](https://img.shields.io/github/contributors/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/graphs/contributors) [![Last commit](https://img.shields.io/github/last-commit/KFERMercer/OpenWrt)](https://github.com/KFERMercer/OpenWrt/commits/master)
+## [![Build](https://img.shields.io/github/workflow/status/KFERMercer/OpenWrt/OpenWrt-CI/master?color=blue)](https://github.com/KFERMercer/OpenWrt/actions?query=workflow%3AOpenWrt-CI) [![Release](https://img.shields.io/github/release/KFERMercer/OpenWrt?color=blue)](https://github.com/KFERMercer/OpenWrt/releases) [![Contributors](https://img.shields.io/github/contributors/KFERMercer/OpenWrt?color=blue)](https://github.com/KFERMercer/OpenWrt/graphs/contributors) [![Last commit](https://img.shields.io/github/last-commit/KFERMercer/OpenWrt?color=blue)](https://github.com/KFERMercer/OpenWrt/commits/master)
 
 This repository is a router firmware that my own using. \
 I'm already made some improvements based on the original project.
@@ -22,7 +22,7 @@ then
 sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev subversion flex node-uglify git-core gcc-multilib p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx-ucl libelf-dev autoconf automake libtool autopoint
 ```
 
-\
+
 Run
 
 ```shell
@@ -37,7 +37,7 @@ to get all the latest package definitions, defined in `/feeds.conf` or `/feeds.c
 
 to install symlinks of all of them into `/package/feeds/`.
 
-\
+
 Use
 
 ```shell
@@ -46,7 +46,7 @@ make menuconfig
 
 to configure your image.
 
-\
+
 Simply running
 
 ```shell
