@@ -9,8 +9,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=baidupcs-web
-PKG_VERSION:=3.6.8
-PKG_RELEASE:=6
+PKG_VERSION:=3.7.0
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
