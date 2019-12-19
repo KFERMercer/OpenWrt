@@ -45,8 +45,9 @@ jobs:
 
           sudo mkdir -p -m 777 /mnt/openwrt/bin /mnt/openwrt/build_dir/host /mnt/openwrt/build_dir/hostpkg /mnt/openwrt/dl /mnt/openwrt/feeds /mnt/openwrt/staging_dir
           ln -s /mnt/openwrt/bin ./bin
-          mkdir -p ./build_dir/host && ln -s -f /mnt/openwrt/build_dir/host ./build_dir/host
-          mkdir -p ./build_dir/host && ln -s -f /mnt/openwrt/build_dir/hostpkg ./build_dir/hostpkg
+          mkdir -p ./build_dir
+          ln -s -f /mnt/openwrt/build_dir/host ./build_dir/host
+          ln -s -f /mnt/openwrt/build_dir/hostpkg ./build_dir/hostpkg
           ln -s /mnt/openwrt/dl ./dl
           ln -s /mnt/openwrt/feeds ./feeds
           ln -s /mnt/openwrt/staging_dir ./staging_dir
@@ -76,9 +77,8 @@ jobs:
           echo "======================="
           df -h
           echo "======================="
-          du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
-          du -h --max-depth=1 ./build_dir
-          du -h --max-depth=1 ./bin
+          du -h ./ --max-depth=1
+          du -h /mnt/openwrt/ --max-depth=1
 
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
