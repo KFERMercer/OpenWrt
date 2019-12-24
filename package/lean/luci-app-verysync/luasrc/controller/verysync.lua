@@ -1,4 +1,3 @@
-
 module("luci.controller.verysync", package.seeall)
 
 function index()
