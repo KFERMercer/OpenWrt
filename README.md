@@ -1,3 +1,5 @@
+# forked from KFERMercer/OpenWrt
+
 # 这是一个带有自动编译Openwrt固件的项目，目前生成的固件可以给X86_64路由器用。
 
 ## 1.固件应该会在每天自动编译好，点击上面的Action按钮即可下载此固件。
