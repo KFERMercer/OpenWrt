@@ -36,7 +36,7 @@ jobs:
         git config --global user.name "KFERMercer"
 
     - name: Load upstream commits
-      run: git pull https://github.com/coolsnowwolf/lede.git --no-edit
+      run: git pull https://github.com/KFERMercer/OpenWrt.git --no-edit
 
     - name: Push Commits
       env:
