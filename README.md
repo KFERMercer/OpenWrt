@@ -1,6 +1,6 @@
-# forked from [KFERMercer/OpenWrt](https://github.com/KFERMercer/OpenWrt) ，I am not author.
+# Forked from [KFERMercer/OpenWrt](https://github.com/KFERMercer/OpenWrt) ，I am not author.
 
-## [![Build](https://img.shields.io/github/workflow/status/Narizgnaw/Openwrt_Homeuse/OpenWrt-CI/master?color=blue)](https://github.com/Narizgnaw/Openwrt_Homeuse/actions?query=workflow%3AOpenWrt-CI) [![Last commit](https://img.shields.io/github/last-commit/Narizgnaw/Openwrt_Homeuse?color=blue)](https://github.com/Narizgnaw/Openwrt_Homeuse/commits/master)
+## [![Build](https://img.shields.io/github/workflow/status/Narizgnaw/Openwrt_Homeuse/OpenWrt-CI?style=flat-square)](https://github.com/Narizgnaw/Openwrt_Homeuse/actions?query=workflow%3AOpenWrt-CI) [![Last commit](https://img.shields.io/github/last-commit/Narizgnaw/Openwrt_Homeuse?style=flat-square)](https://github.com/Narizgnaw/Openwrt_Homeuse/commits/master)
 
 # 这是一个带有自动编译[Openwrt](https://github.com/openwrt/openwrt)固件的项目，目前生成的固件可以给X86_64路由器用。
 
@@ -19,8 +19,10 @@
 
 （6）如果想变更配置，请修改/makeconfig.d/x86_64.config这个文件。
 
-## 3.想Fork的请点击[此链接](https://github.com/KFERMercer/OpenWrt)到KFERMercer原库Fork最新源码。
+## 3.不要Fork我的库，Fork以下两位大佬的库。
 
-## 4.lean大佬的最新源码在[这里](https://github.com/coolsnowwolf/lede)。
+[![Fork KFER OP](https://img.shields.io/github/forks/KFERMercer/OpenWrt?label=Fork%20KFERMercer%2FOpenWrt&style=flat-square)](https://github.com/KFERMercer/OpenWrt) [![Fork LEAN OP](https://img.shields.io/github/forks/coolsnowwolf/lede?label=Fork%20Lean%2FOpenWrt&style=flat-square)](https://github.com/coolsnowwolf/lede)
 
-## 5.本库仅供自用，本人又菜又懒，暂时无法提供issue服务。
+## 4.本库仅供自用，本人又菜又懒，暂时无法提供issue服务。
+
+## 5.感谢Openwrt项目开发组。
