@@ -1,10 +1,3 @@
-  _______                     ________        __
- |       |.-----.-----.-----.|  |  |  |.----.|  |_
- |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
- |_______||   __|_____|__|__||________||__|  |____|
-          |__| W I R E L E S S   F R E E D O M
- -----------------------------------------------------
-
 # forked from [KFERMercer/OpenWrt](https://github.com/KFERMercer/OpenWrt) ，I am not author.
 
 ## [![Build](https://img.shields.io/github/workflow/status/Narizgnaw/Openwrt_Homeuse/OpenWrt-CI/master?color=blue)](https://github.com/Narizgnaw/Openwrt_Homeuse/actions?query=workflow%3AOpenWrt-CI) [![Last commit](https://img.shields.io/github/last-commit/Narizgnaw/Openwrt_Homeuse?color=blue)](https://github.com/Narizgnaw/Openwrt_Homeuse/commits/master)
