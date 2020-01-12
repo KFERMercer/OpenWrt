@@ -4,7 +4,7 @@ get_mac_binary() {
 	local path="$1"
 	local offset="$2"
 
-	if ! [ -e "$path" ]; then
+	if [ -z "$path" ]; then
 		echo "get_mac_binary: file $path not found!" >&2
 		return
 	fi
@@ -79,7 +79,12 @@ mtd_get_mac_binary_ubi() {
 	local ubidev=$(nand_find_ubi $CI_UBIPART)
 	local part=$(nand_find_volume $ubidev $1)
 
-	get_mac_binary "/dev/$part" "$offset"
+	if [ -z "$part" ]; then
+		echo "mtd_get_mac_binary: ubi volume $mtdname not found!" >&2
+		return
+	fi
+
+	hexdump -v -n 6 -s $offset -e '5/1 "%02x:" 1/1 "%02x"' /dev/$part 2>/dev/null
 }
 
 mtd_get_part_size() {
