@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v2ray
 PKG_VERSION:=4.22.1
-PKG_RELEASE:=3
+PKG_RELEASE:=5
 PKG_BUILD_DIR:=$(BUILD_DIR)/v2ray-core-$(PKG_VERSION)
 
 PKG_SOURCE:=$(PKG_NAME)-core-$(PKG_VERSION).tar.gz
@@ -61,7 +61,7 @@ GO_PKG_LDFLAGS:=-s -w
 GO_PKG_LDFLAGS_X:= \
 	v2ray.com/core.version=$(PKG_VERSION) \
 	v2ray.com/core.build=R$(PKG_RELEASE) \
-	v2ray.com/core.codename=KFERMercer edition
+	v2ray.com/core.codename=OpenWrt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
