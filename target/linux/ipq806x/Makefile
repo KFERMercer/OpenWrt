@@ -25,6 +25,6 @@ DEFAULT_PACKAGES += \
 	kmod-usb3 kmod-usb-dwc3-of-simple kmod-usb-phy-qcom-dwc3 \
 	kmod-ath10k wpad \
 	uboot-envtools \
-	automount autosamba luci-app-ipsec-vpnd v2ray shadowsocks-libev-ss-redir shadowsocksr-libev-server
+	automount autosamba luci-app-ipsec-vpnd
 
 $(eval $(call BuildTarget))
