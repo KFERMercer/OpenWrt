@@ -23,8 +23,8 @@ DEFAULT_PACKAGES += \
 	kmod-ata-core kmod-ata-ahci kmod-ata-ahci-platform \
 	kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport \
 	kmod-usb3 kmod-usb-dwc3-of-simple kmod-usb-phy-qcom-dwc3 \
-	kmod-ath10k wpad \
-	uboot-envtools \
-	automount autosamba luci-app-ipsec-vpnd
+	kmod-ath10k-ct wpad uboot-envtools e2fsprogs \
+	automount autosamba \
+	luci-app-ipsec-vpnd luci-app-zerotier ca-certificates
 
 $(eval $(call BuildTarget))
