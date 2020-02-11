@@ -54,7 +54,7 @@ local pull_section = m:section(Table,pull_value, translate("Pull Image"))
 pull_section.template="cbi/nullsection"
 local tag_name = pull_section:option(Value, "_image_tag_name")
 tag_name.template="docker/cbi/inlinevalue"
-tag_name.placeholder="lisaac/luci:latest"
+tag_name.placeholder="hello-world:latest"
 local registry = pull_section:option(Value, "_registry")
 registry.template="docker/cbi/inlinevalue"
 registry:value("index.docker.io", "DockerHub")
