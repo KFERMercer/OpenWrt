@@ -36,7 +36,7 @@ device_name.description = translate("在推送信息标题中会标识本设备�
 
 sleeptime=s:taboption("tab_basic", Value,"sleeptime",translate('检测时间间隔'))
 sleeptime.default = "60"
-sleeptime.description = translate("越短的时间灵敏度越高，但会占用更多的系统资源")
+sleeptime.description = translate("越短的时间时间响应越及时，但会占用更多的系统资源")
 
 debuglevel=s:taboption("tab_basic", ListValue,"debuglevel",translate("日志调试等级"))
 debuglevel:value("",translate("关闭"))
@@ -154,18 +154,28 @@ e:value("2",translate("间隔发送"))
 e=s:taboption("tab_basic3", ListValue,"regular_time",translate("发送时间"))
 for t=0,23 do
 e:value(t,translate("每天"..t.."点"))
-end
-e.default=12
+end	
+e.default=8	
 e.datatype=uinteger
 e:depends("send_mode","1")
 
-e=s:taboption("tab_basic3", ListValue,"regular_time_2",translate("第一次发送时间"))
+e=s:taboption("tab_basic3", ListValue,"regular_time_2",translate("发送时间"))
+e:value("",translate("关闭"))
 for t=0,23 do
 e:value(t,translate("每天"..t.."点"))
-end
-e.default=8
+end	
+e.default="关闭"
 e.datatype=uinteger
-e:depends("send_mode","2")
+e:depends("send_mode","1")
+
+e=s:taboption("tab_basic3", ListValue,"regular_time_3",translate("发送时间"))
+e:value("",translate("关闭"))
+for t=0,23 do
+e:value(t,translate("每天"..t.."点"))
+end	
+e.default="关闭"
+e.datatype=uinteger
+e:depends("send_mode","1")
 
 e=s:taboption("tab_basic3", ListValue,"interval_time",translate("发送间隔"))
 for t=1,23 do
@@ -174,6 +184,7 @@ end
 e.default=6
 e.datatype=uinteger
 e:depends("send_mode","2")
+e.description = translate("<br/>从 00:00 开始，每 * 小时发送一次")
 
 title= s:taboption("tab_basic3", Value, "send_title", translate("微信推送标题"))
 title:depends("send_mode","1")
