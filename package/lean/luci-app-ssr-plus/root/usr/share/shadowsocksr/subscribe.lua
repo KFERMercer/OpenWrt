@@ -95,14 +95,14 @@ end
 -- 处理数据
 local function processData(szType, content)
 	local result = {
-		auth_enable = '0',
+-- 		auth_enable = '0',
 		switch_enable = '1',
 		type = szType,
 		local_port = 1234,
-		timeout = 60, -- 不太确定 好像是死的
-		fast_open = 0,
-		kcp_enable = 0,
-		kcp_port = 0,
+-- 		timeout = 60, -- 不太确定 好像是死的
+-- 		fast_open = 0,
+-- 		kcp_enable = 0,
+-- 		kcp_port = 0,
 		kcp_param = '--nocomp'
 	}
 	result.hashkey = type(content) == 'string' and md5(content) or md5(jsonStringify(content))
@@ -136,8 +136,8 @@ local function processData(szType, content)
 		result.alter_id = info.aid
 		result.vmess_id = info.id
 		result.alias = info.ps
-		result.mux = 1
-		result.concurrency = 8
+-- 		result.mux = 1
+-- 		result.concurrency = 8
 		if info.net == 'ws' then
 			result.ws_host = info.host
 			result.ws_path = info.path
@@ -165,8 +165,8 @@ local function processData(szType, content)
 			result.quic_key = info.key
 			result.quic_security = info.securty
 		end
-		if not info.security then
-			result.security = "auto"
+		if info.security then
+			result.security = info.security
 		end
 		if info.tls == "tls" or info.tls == "1" then
 			result.tls = "1"
@@ -193,12 +193,21 @@ local function processData(szType, content)
 		if host[2]:find("/\\?") then
 			local query = split(host[2], "/\\?")
 			result.server_port = query[1]
-			-- local params = {}
-			-- for _, v in pairs(split(query[2], '&')) do
-			--   local t = split(v, '=')
-			--   params[t[1]] = t[2]
-			-- end
-			-- 这里似乎没什么用 我看数据结构没有写插件的支持 先抛弃
+			local params = {}
+			for _, v in pairs(split(query[2], '&')) do
+				local t = split(v, '=')
+				params[t[1]] = t[2]
+			end
+			if params.lugin then
+				local plugin_info = UrlDecode(params.lugin)
+				local idx_pn = plugin_info:find(";")
+				if idx_pn then
+						result.plugin = plugin_info:sub(1, idx_pn - 1)
+						result.plugin_opts = plugin_info:sub(idx_pn + 1, #plugin_info)
+				else
+						result.plugin = plugin_info
+				end
+			end
 		else
 			result.server_port = host[2]
 		end
@@ -365,3 +374,4 @@ if subscribe_url and #subscribe_url > 0 then
 		end
 	end)
 end
+
