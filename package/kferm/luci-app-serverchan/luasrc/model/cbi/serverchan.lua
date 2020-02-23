@@ -189,7 +189,7 @@ e.description = translate("<br/>从 00:00 开始，每 * 小时发送一次")
 title= s:taboption("tab_basic3", Value, "send_title", translate("微信推送标题"))
 title:depends("send_mode","1")
 title:depends("send_mode","2")
-title.placeholder = "OpenWrt By tty228 路由状态："
+title.placeholder = "OpenWrt 运行状态："
 title.optional = true
 title.description = translate("<br/>使用特殊符号可能会造成发送失败")
 
