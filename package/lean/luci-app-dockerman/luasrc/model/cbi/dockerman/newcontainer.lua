@@ -4,7 +4,6 @@ Copyright 2019 lisaac <https://github.com/lisaac/luci-app-dockerman>
 ]]--
 
 require "luci.util"
-require "math"
 local uci = luci.model.uci.cursor()
 local docker = require "luci.model.docker"
 local dk = docker.new()
@@ -16,27 +15,32 @@ local networks = dk.networks:list().body
 local containers = dk.containers:list({query = {all=true}}).body
 
 local is_quot_complete = function(str)
+  require "math"
   if not str then return true end
   local num = 0, w
-  for w in str:gmatch("[\"\']") do
+  for w in str:gmatch("\"") do
     num = num + 1
   end
-  if math.fmod(num, 2) ~= 0 then
-    return false
-  else
-    return true
+  if math.fmod(num, 2) ~= 0 then return false end
+  num = 0
+  for w in str:gmatch("\'") do
+    num = num + 1
   end
+  if math.fmod(num, 2) ~= 0 then return false end
+  return true
 end
 
 -- reslvo default config
 local default_config = { }
 if cmd_line and cmd_line:match("^docker.+") then
-  local key = nil, _key
+  local key = nil
+  local _key = nil
   --cursor = 0: docker run
-  --cursor = 1: resloving para
-  --cursor = 2: resloving image
-  --cursor > 2: resloving command
+  --cursor = 1: resolving para
+  --cursor = 2: resolving image
+  --cursor > 2: resolving command
   local cursor = 0
+  default_config["advance"] = 1
   for w in cmd_line:gmatch("[^%s]+") do 
     -- skip '\'
     if w == '\\' then
@@ -64,16 +68,17 @@ if cmd_line and cmd_line:match("^docker.+") then
       --key=value
       local val
       key, val = w:match("^%-+(.-)=(.+)")
-      -- -dit
-      if not key then key = w:match("^%-+(.+)") end
 
       if not key then
-        key = w:match("^%-(.+)")
+        key = w:match("^%-([^-]+)")
+        -- -dit
         if key:match("i") or key:match("t") or key:match("d") then
           if key:match("i") then default_config["interactive"] = true end
           if key:match("t") then default_config["tty"] = true end
           -- clear key
           key = nil
+        else
+          key = w:match("^%-+(.+)")
         end
       end
 
@@ -83,11 +88,9 @@ if cmd_line and cmd_line:match("^docker.+") then
         key = "port"
       elseif key == "e" then
         key = "env"
-      elseif key == "dns" then
-        key = "dns"
       elseif key == "net" then
         key = "network"
-      elseif key == "h" or key == "hostname" then
+      elseif key == "h" then
         key = "hostname"
       elseif key == "cpu-shares" then
         key = "cpushares"
@@ -103,47 +106,59 @@ if cmd_line and cmd_line:match("^docker.+") then
       end
       --key=value
       if val then
-        if key == "mount" or key == "link" or key == "env" or key == "dns" or key == "port" or key == "device" or key == "tmpfs" then
+        if key == "mount" or key == "link" or key == "env" or key == "dns" or key == "port" or key == "device" or key == "tmpfs" or key == "sysctl" then
           if not default_config[key] then default_config[key] = {} end
           table.insert( default_config[key], val )
+          if is_quot_complete(val) then
           -- clear quotation marks
-          default_config[key][#default_config[key]] = default_config[key][#default_config[key]]:gsub("[\"\']", "")
+            default_config[key][#default_config[key]] = default_config[key][#default_config[key]]:gsub("[\"\']", "")
+            _key=nil
+          else
+            _key=key
+          end
+          key = nil
         else
           default_config[key] = val
-          -- clear quotation marks
-          default_config[key] = default_config[key]:gsub("[\"\']", "")
+          -- if there are " or ' in val and separate by space, we need keep the _key to link with next w
+          if is_quot_complete(val) then
+            -- clear quotation marks
+            default_config[key] = default_config[key]:gsub("[\"\']", "")
+            _key = nil
+          else
+            _key = key
+          end
+
         end
-        -- if there are " or ' in val and separate by space, we need keep the _key to link with next w
-        if is_quot_complete(val) then
-          _key = nil
-        else
-          _key = key
-        end
-        -- clear key
         key = nil
       end
       cursor = 1
     -- value
     elseif key and type(key) == "string" and cursor == 1 then
-      if key == "mount" or key == "link" or key == "env" or key == "dns" or key == "port" or key == "device" or key == "tmpfs" then
+      if key == "mount" or key == "link" or key == "env" or key == "dns" or key == "port" or key == "device" or key == "tmpfs" or key == "sysctl" then
         if not default_config[key] then default_config[key] = {} end
         table.insert( default_config[key], w )
-        -- clear quotation marks
-        default_config[key][#default_config[key]] = default_config[key][#default_config[key]]:gsub("[\"\']", "")
+        if is_quot_complete(w) then
+          _key = nil
+          -- clear quotation marks
+          default_config[key][#default_config[key]] = default_config[key][#default_config[key]]:gsub("[\"\']", "")
+        else
+          _key = key
+        end
+        key = nil
       else
         default_config[key] = w
-        -- clear quotation marks
-        default_config[key] = default_config[key]:gsub("[\"\']", "")
+              -- if there are " or ' in val and separate by space, we need keep the _key to link with next w
+        if is_quot_complete(w) then
+          _key = nil
+           -- clear quotation marks
+          default_config[key] = default_config[key]:gsub("[\"\']", "")
+        else
+          _key = key
+        end
       end
-      if key == "cpus" or key == "cpushare" or key == "memory" or key == "blkioweight" or key == "device" or key == "tmpfs" then
-        default_config["advance"] = 1
-      end
-      -- if there are " or ' in val and separate by space, we need keep the _key to link with next w
-      if is_quot_complete(w) then
-        _key = nil
-      else
-        _key = key
-      end
+      -- if key == "cpus" or key == "cpushare" or key == "memory" or key == "blkioweight" or key == "device" or key == "tmpfs" then
+      --   default_config["advance"] = 1
+      -- end
       key = nil
       cursor = 1
     --image and command
@@ -158,7 +173,7 @@ if cmd_line and cmd_line:match("^docker.+") then
   end
 elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
   local container_id = cmd_line:match("^duplicate/(.+)")
-  create_body = dk:containers_duplicate_config({id = container_id})
+  create_body = dk:containers_duplicate_config({id = container_id}) or {}
   if not create_body.HostConfig then create_body.HostConfig = {} end
   if next(create_body) ~= nil then
     default_config.name = nil
@@ -170,12 +185,19 @@ elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
     default_config.restart =  create_body.HostConfig.RestartPolicy and create_body.HostConfig.RestartPolicy.name or nil
     -- default_config.network = create_body.HostConfig.NetworkMode == "default" and "bridge" or create_body.HostConfig.NetworkMode
     -- if container has leave original network, and add new network, .HostConfig.NetworkMode is INcorrect, so using first child of .NetworkingConfig.EndpointsConfig
-    default_config.network = next(create_body.NetworkingConfig.EndpointsConfig)
+    default_config.network = create_body.NetworkingConfig and create_body.NetworkingConfig.EndpointsConfig and next(create_body.NetworkingConfig.EndpointsConfig) or nil
     default_config.ip = default_config.network and default_config.network ~= "bridge" and default_config.network ~= "host" and default_config.network ~= "null" and create_body.NetworkingConfig.EndpointsConfig[default_config.network].IPAMConfig and create_body.NetworkingConfig.EndpointsConfig[default_config.network].IPAMConfig.IPv4Address or nil
     default_config.link = create_body.HostConfig.Links
     default_config.env = create_body.Env
     default_config.dns = create_body.HostConfig.Dns
     default_config.mount = create_body.HostConfig.Binds
+
+    if create_body.HostConfig.Sysctls and type(create_body.HostConfig.Sysctls) == "table" then
+      default_config.sysctl = {}
+      for k, v in pairs(create_body.HostConfig.Sysctls) do
+        table.insert( default_config.sysctl, k.."="..v )
+      end
+    end
 
     if create_body.HostConfig.PortBindings and type(create_body.HostConfig.PortBindings) == "table" then
       default_config.port = {}
@@ -198,8 +220,12 @@ elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
         table.insert( default_config.device, v.PathOnHost..":"..v.PathInContainer..(v.CgroupPermissions ~= "" and (":" .. v.CgroupPermissions) or "") )
       end
     end
-
-    default_config.tmpfs = create_body.HostConfig.Tmpfs
+    if create_body.HostConfig.Tmpfs and type(create_body.HostConfig.Tmpfs) == "table" then
+      default_config.tmpfs = {}
+      for k, v in pairs(create_body.HostConfig.Tmpfs) do
+        table.insert( default_config.tmpfs, k .. (v~="" and ":" or "")..v )
+      end
+    end
   end
 end
 
@@ -219,9 +245,9 @@ local s = m:section(SimpleSection, translate("New Container"))
 s.addremove = true
 s.anonymous = true
 
-local d = s:option(DummyValue,"cmd_line", translate("Resolv CLI"))
+local d = s:option(DummyValue,"cmd_line", translate("Resolve CLI"))
 d.rawhtml  = true
-d.template = "dockerman/resolv_container"
+d.template = "dockerman/newcontainer_resolve"
 
 d = s:option(Value, "name", translate("Container Name"))
 d.rmempty = true
@@ -344,6 +370,13 @@ d.rmempty = true
 d:depends("advance", 1)
 d.default = default_config.tmpfs or nil
 
+d = s:option(DynamicList, "sysctl", translate("Sysctl(--sysctl)"), translate("Sysctls (kernel parameters) options"))
+d.template = "dockerman/cbi/xdynlist"
+d.placeholder = "net.ipv4.ip_forward=1"
+d.rmempty = true
+d:depends("advance", 1)
+d.default = default_config.sysctl or nil
+
 d = s:option(Value, "cpus", translate("CPUs"), translate("Number of CPUs. Number is a fractional number. 0.000 means no limit."))
 d.placeholder = "1.5"
 d.rmempty = true
@@ -406,6 +439,16 @@ m.handle = function(self, state, data)
   local restart = data.restart
   local env = data.env
   local dns = data.dns
+  local sysctl = {}
+  tmp = data.sysctl
+  if type(tmp) == "table" then
+    for i, v in ipairs(tmp) do
+      local k,v1 = v:match("(.-)=(.+)")
+      if k and v1 then
+        sysctl[k]=v1
+      end
+    end
+  end
   local network = data.network
   local ip = (network ~= "bridge" and network ~= "host" and network ~= "none") and data.ip or nil
   local mount = data.mount
@@ -420,8 +463,9 @@ m.handle = function(self, state, data)
   tmp = data.tmpfs
   if type(tmp) == "table" then
     for i, v in ipairs(tmp)do
-      local _,_, k,v1 = v:find("(.-):(.+)")
-      if k and v1 then
+      local k= v:match("([^:]+)")
+      local v1 = v:match(".-:([^:]+)") or ""
+      if k then
         tmpfs[k]=v1
       end
     end
@@ -529,9 +573,9 @@ m.handle = function(self, state, data)
     -- no ip + no duplicate config
     create_body.NetworkingConfig = nil
   end
-
   create_body["HostConfig"]["Tmpfs"] = (next(tmpfs) ~= nil) and tmpfs or nil
   create_body["HostConfig"]["Devices"] = (next(device) ~= nil) and device or nil
+  create_body["HostConfig"]["Sysctls"] = (next(sysctl) ~= nil) and sysctl or nil
 
   if network == "bridge" and next(link) ~= nil then
     create_body["HostConfig"]["Links"] = link

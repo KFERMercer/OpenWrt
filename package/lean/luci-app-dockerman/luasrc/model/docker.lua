@@ -81,6 +81,20 @@ local map_subtract = function(t1, t2)
   return next(res) ~= nil and res or nil
 end
 
+local function clear_empty_tables( t )
+  local k, v
+  if next(t) == nil then
+    t = nil
+  else
+    for k, v in pairs(t) do
+      if type(v) == 'table' then
+        t[k] = clear_empty_tables(v)
+      end
+    end
+  end
+  return t
+end
+
 -- return create_body, extra_network
 local get_config = function(old_config, old_host_config, old_network_setting, image_config)
   local config = old_config
@@ -122,7 +136,8 @@ local get_config = function(old_config, old_host_config, old_network_setting, im
   local create_body = config
   create_body["HostConfig"] = host_config
   create_body["NetworkingConfig"] = {EndpointsConfig = network_setting}
-
+  create_body = clear_empty_tables(create_body) or {}
+  extra_network = clear_empty_tables(extra_network) or {}
   return create_body, extra_network
 end
 
@@ -175,10 +190,9 @@ local upgrade = function(self, request)
 
   -- extra networks need to network connect action
   for k, v in pairs(extra_network) do
-    if v.IPAMConfig and next(v.IPAMConfig) == nil then v.IPAMConfig =nil end
-    if v.DriverOpts and next(v.DriverOpts) == nil then v.DriverOpts =nil end
-    if v.Aliases and next(v.Aliases) == nil then v.Aliases =nil end
-
+    -- if v.IPAMConfig and next(v.IPAMConfig) == nil then v.IPAMConfig =nil end
+    -- if v.DriverOpts and next(v.DriverOpts) == nil then v.DriverOpts =nil end
+    -- if v.Aliases and next(v.Aliases) == nil then v.Aliases =nil end
     _docker:append_status("Networks: Connect" .. " " .. container_name .. "...")
     res = self.networks:connect({id = k, body = {Container = container_name, EndpointConfig = v}})
     if res.code > 300 then return res end
@@ -202,8 +216,11 @@ end
 
 _docker.new = function(option)
   local option = option or {}
+  local remote = uci:get("dockerman", "local", "remote_endpoint")
   options = {
-    socket_path = option.socket_path or uci:get("dockerman", "local", "socket_path"),
+    socket_path = (remote == nil) and (option.socket_path or uci:get("dockerman", "local", "socket_path")) or nil,
+    host = (remote == "true") and (option.host or uci:get("dockerman", "local", "remote_host")) or nil,
+    port = (remote == "true") and (option.port or uci:get("dockerman", "local", "remote_port")) or nil,
     debug = option.debug or uci:get("dockerman", "local", "debug") == 'true' and true or false,
     debug_path = option.debug_path or uci:get("dockerman", "local", "debug_path")
   }
