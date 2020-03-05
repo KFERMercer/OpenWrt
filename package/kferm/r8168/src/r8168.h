@@ -4,7 +4,7 @@
 # r8168 is the Linux device driver released for Realtek Gigabit Ethernet
 # controllers with PCI-Express interface.
 #
-# Copyright(c) 2018 Realtek Semiconductor Corp. All rights reserved.
+# Copyright(c) 2019 Realtek Semiconductor Corp. All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -250,6 +250,14 @@ do { \
 #define SUPPORTED_Asym_Pause  (1 << 14)
 #endif
 
+#ifndef  MDIO_EEE_100TX
+#define  MDIO_EEE_100TX  0x0002
+#endif
+
+#ifndef  MDIO_EEE_1000T
+#define  MDIO_EEE_1000T  0x0004
+#endif
+
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29)
 #ifdef CONFIG_NET_POLL_CONTROLLER
 #define RTL_NET_POLL_CONTROLLER dev->poll_controller=rtl8168_netpoll
@@ -327,12 +335,12 @@ do { \
 #define DASH_SUFFIX ""
 #endif
 
-#define RTL8168_VERSION "8.046.00" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
+#define RTL8168_VERSION "8.048.00" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
 #define MODULENAME "r8168"
 #define PFX MODULENAME ": "
 
 #define GPL_CLAIM "\
-r8168  Copyright (C) 2018  Realtek NIC software team <nicfae@realtek.com> \n \
+r8168  Copyright (C) 2019  Realtek NIC software team <nicfae@realtek.com> \n \
 This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. \n \
 This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. \n"
 
@@ -430,12 +438,12 @@ This is free software, and you are welcome to redistribute it under certain cond
 #define SHORT_PACKET_PADDING_BUF_SIZE 256
 
 /* write/read MMIO register */
-#define RTL_W8(reg, val8)   writeb ((val8), ioaddr + (reg))
-#define RTL_W16(reg, val16) writew ((val16), ioaddr + (reg))
-#define RTL_W32(reg, val32) writel ((val32), ioaddr + (reg))
-#define RTL_R8(reg)     readb (ioaddr + (reg))
-#define RTL_R16(reg)        readw (ioaddr + (reg))
-#define RTL_R32(reg)        ((unsigned long) readl (ioaddr + (reg)))
+#define RTL_W8(tp, reg, val8)	writeb((val8), tp->mmio_addr + (reg))
+#define RTL_W16(tp, reg, val16)	writew((val16), tp->mmio_addr + (reg))
+#define RTL_W32(tp, reg, val32)	writel((val32), tp->mmio_addr + (reg))
+#define RTL_R8(tp, reg)		readb(tp->mmio_addr + (reg))
+#define RTL_R16(tp, reg)		readw(tp->mmio_addr + (reg))
+#define RTL_R32(tp, reg)		((unsigned long) readl(tp->mmio_addr + (reg)))
 
 #ifndef DMA_64BIT_MASK
 #define DMA_64BIT_MASK  0xffffffffffffffffULL
@@ -1458,7 +1466,6 @@ struct rtl8168_private {
 #endif
         struct net_device_stats stats;  /* statistics of net device */
         spinlock_t lock;        /* spin lock flag */
-        spinlock_t phy_lock;        /* spin lock flag for GPHY */
         u32 msg_enable;
         u32 tx_tcp_csum_cmd;
         u32 tx_udp_csum_cmd;
@@ -1565,6 +1572,8 @@ struct rtl8168_private {
         u32 HwFiberStat;
         u8 HwSwitchMdiToFiber;
 
+        u8 HwSuppPhyOcpVer;
+
         u16 NicCustLedValue;
 
         u8 HwSuppMagicPktVer;
@@ -1574,6 +1583,10 @@ struct rtl8168_private {
         u8 random_mac;
 
         u8 HwSuppGigaForceMode;
+
+        u16 phy_reg_anlpar;
+
+        u32 HwPcieSNOffset;
 
         //Dash+++++++++++++++++
         u8 HwSuppDashVer;
@@ -1664,6 +1677,9 @@ struct rtl8168_private {
         //Realwow--------------
 #endif //ENABLE_REALWOW_SUPPORT
 
+        u32 eee_adv_t;
+        u8 eee_enabled;
+
 #ifdef ENABLE_R8168_PROCFS
         //Procfs support
         struct proc_dir_entry *proc_dir;
@@ -1710,6 +1726,7 @@ enum mcfg {
         CFG_METHOD_30,
         CFG_METHOD_31,
         CFG_METHOD_32,
+        CFG_METHOD_33,
         CFG_METHOD_MAX,
         CFG_METHOD_DEFAULT = 0xFF
 };
@@ -1748,42 +1765,46 @@ enum mcfg {
 #define NIC_RAMCODE_VERSION_CFG_METHOD_23 (0x0015)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_26 (0x0012)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_28 (0x0019)
-#define NIC_RAMCODE_VERSION_CFG_METHOD_29 (0x0018)
+#define NIC_RAMCODE_VERSION_CFG_METHOD_29 (0x0055)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_31 (0x0003)
 
 //hwoptimize
 #define HW_PATCH_SOC_LAN (BIT_0)
 #define HW_PATCH_SAMSUNG_LAN_DONGLE (BIT_2)
 
-void mdio_write(struct rtl8168_private *tp, u32 RegAddr, u32 value);
-void mdio_prot_write(struct rtl8168_private *tp, u32 RegAddr, u32 value);
-void rtl8168_ephy_write(void __iomem *ioaddr, int RegAddr, int value);
-void mac_ocp_write(struct rtl8168_private *tp, u16 reg_addr, u16 value);
-u16 mac_ocp_read(struct rtl8168_private *tp, u16 reg_addr);
-void ClearEthPhyBit(struct rtl8168_private *tp, u8 addr, u16 mask);
-void SetEthPhyBit(struct rtl8168_private *tp,  u8  addr, u16  mask);
-void OCP_write(struct rtl8168_private *tp, u16 addr, u8 len, u32 data);
-void OOB_notify(struct rtl8168_private *tp, u8 cmd);
+void rtl8168_mdio_write(struct rtl8168_private *tp, u32 RegAddr, u32 value);
+void rtl8168_mdio_prot_write(struct rtl8168_private *tp, u32 RegAddr, u32 value);
+void rtl8168_mdio_prot_direct_write_phy_ocp(struct rtl8168_private *tp, u32 RegAddr, u32 value);
+u32 rtl8168_mdio_read(struct rtl8168_private *tp, u32 RegAddr);
+u32 rtl8168_mdio_prot_read(struct rtl8168_private *tp, u32 RegAddr);
+u32 rtl8168_mdio_prot_direct_read_phy_ocp(struct rtl8168_private *tp, u32 RegAddr);
+void rtl8168_ephy_write(struct rtl8168_private *tp, int RegAddr, int value);
+void rtl8168_mac_ocp_write(struct rtl8168_private *tp, u16 reg_addr, u16 value);
+u16 rtl8168_mac_ocp_read(struct rtl8168_private *tp, u16 reg_addr);
+void rtl8168_clear_eth_phy_bit(struct rtl8168_private *tp, u8 addr, u16 mask);
+void rtl8168_set_eth_phy_bit(struct rtl8168_private *tp,  u8  addr, u16  mask);
+void rtl8168_ocp_write(struct rtl8168_private *tp, u16 addr, u8 len, u32 data);
+void rtl8168_oob_notify(struct rtl8168_private *tp, u8 cmd);
 void rtl8168_init_ring_indexes(struct rtl8168_private *tp);
-void rtl8168_wait_ll_share_fifo_ready(struct net_device *dev);
-int rtl8168_eri_write(void __iomem *ioaddr, int addr, int len, u32 value, int type);
-void OOB_mutex_lock(struct rtl8168_private *tp);
-u32 mdio_read(struct rtl8168_private *tp, u32 RegAddr);
-u32 OCP_read(struct rtl8168_private *tp, u16 addr, u8 len);
-u32 OCP_read_with_oob_base_address(struct rtl8168_private *tp, u16 addr, u8 len, u32 base_address);
-u32 OCP_write_with_oob_base_address(struct rtl8168_private *tp, u16 addr, u8 len, u32 value, u32 base_address);
-u32 rtl8168_eri_read(void __iomem *ioaddr, int addr, int len, int type);
-u32 rtl8168_eri_read_with_oob_base_address(void __iomem *ioaddr, int addr, int len, int type, u32 base_address);
-int rtl8168_eri_write_with_oob_base_address(void __iomem *ioaddr, int addr, int len, u32 value, int type, u32 base_address);
-u16 rtl8168_ephy_read(void __iomem *ioaddr, int RegAddr);
+int rtl8168_eri_write(struct rtl8168_private *tp, int addr, int len, u32 value, int type);
+void rtl8168_oob_mutex_lock(struct rtl8168_private *tp);
+u32 rtl8168_mdio_read(struct rtl8168_private *tp, u32 RegAddr);
+u32 rtl8168_ocp_read(struct rtl8168_private *tp, u16 addr, u8 len);
+u32 rtl8168_ocp_read_with_oob_base_address(struct rtl8168_private *tp, u16 addr, u8 len, u32 base_address);
+u32 rtl8168_ocp_write_with_oob_base_address(struct rtl8168_private *tp, u16 addr, u8 len, u32 value, u32 base_address);
+u32 rtl8168_eri_read(struct rtl8168_private *tp, int addr, int len, int type);
+u32 rtl8168_eri_read_with_oob_base_address(struct rtl8168_private *tp, int addr, int len, int type, u32 base_address);
+int rtl8168_eri_write_with_oob_base_address(struct rtl8168_private *tp, int addr, int len, u32 value, int type, u32 base_address);
+u16 rtl8168_ephy_read(struct rtl8168_private *tp, int RegAddr);
 void rtl8168_wait_txrx_fifo_empty(struct net_device *dev);
-void EnableNowIsOob(struct rtl8168_private *tp);
-void DisableNowIsOob(struct rtl8168_private *tp);
-void OOB_mutex_unlock(struct rtl8168_private *tp);
-void Dash2DisableTx(struct rtl8168_private *tp);
-void Dash2EnableTx(struct rtl8168_private *tp);
-void Dash2DisableRx(struct rtl8168_private *tp);
-void Dash2EnableRx(struct rtl8168_private *tp);
+void rtl8168_wait_ll_share_fifo_ready(struct net_device *dev);
+void rtl8168_enable_now_is_oob(struct rtl8168_private *tp);
+void rtl8168_disable_now_is_oob(struct rtl8168_private *tp);
+void rtl8168_oob_mutex_unlock(struct rtl8168_private *tp);
+void rtl8168_dash2_disable_tx(struct rtl8168_private *tp);
+void rtl8168_dash2_enable_tx(struct rtl8168_private *tp);
+void rtl8168_dash2_disable_rx(struct rtl8168_private *tp);
+void rtl8168_dash2_enable_rx(struct rtl8168_private *tp);
 void rtl8168_hw_disable_mac_mcu_bps(struct net_device *dev);
 
 #define HW_SUPPORT_CHECK_PHY_DISABLE_MODE(_M)        ((_M)->HwSuppCheckPhyDisableModeVer > 0 )
