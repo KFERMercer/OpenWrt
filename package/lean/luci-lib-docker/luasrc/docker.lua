@@ -83,18 +83,27 @@ local docker_stream_filter = function(buffer)
   -- return string.sub(buffer, 9, valid_length + 8)
 end
 
-local send_http_socket = function(socket_path, req_header, req_body, callback)
-  local docker_socket = nixio.socket("unix", "stream")
-  if docker_socket:connect(socket_path) ~= true then
-    return {
-      headers = {code=497, message="bad socket path", protocol="HTTP/1.1"},
-      body = {message="can\'t connect to unix socket"}
-    }
+local open_socket = function(req_options)
+  local socket
+  if type(req_options) ~= "table" then return socket end
+  if req_options.socket_path then
+    socket = nixio.socket("unix", "stream")
+    if socket:connect(req_options.socket_path) ~= true then return nil end
+  elseif req_options.host and req_options.port then
+    socket = nixio.connect(req_options.host, req_options.port)
   end
+  if socket then
+    return socket
+  else
+    return nil
+  end
+end
+
+local send_http_socket = function(docker_socket, req_header, req_body, callback)
   if docker_socket:send(req_header) == 0 then
     return {
-      headers={code=498,message="bad socket path", protocol="HTTP/1.1"},
-      body={message="can\'t send data to unix socket"}
+      headers={code=498,message="bad path", protocol="HTTP/1.1"},
+      body={message="can\'t send data to socket"}
     }
   end
 
@@ -171,9 +180,7 @@ end
 
 local gen_header = function(options, http_method, api_group, api_action, name_or_id, request)
   local header, query, path
-  options = options or {}
-  options.protocol = options.protocol or "HTTP/1.1"
-  name_or_id = name_or_id ~= "" and name_or_id or nil
+  name_or_id = (name_or_id ~= "") and name_or_id or nil
 
   if request and type(request.query) == "table" then
     local k, v
@@ -187,7 +194,6 @@ local gen_header = function(options, http_method, api_group, api_action, name_or
       end
     end
   end
-
   path = (api_group and ("/" .. api_group) or "") .. (name_or_id and ("/" .. name_or_id) or "") .. (api_action and ("/" .. api_action) or "") .. (query or "")
   header = (http_method or "GET") .. " " .. path .. " " .. options.protocol .. "\r\n"
   header = header .. "Host: " .. options.host .. "\r\n"
@@ -223,8 +229,16 @@ local call_docker = function(options, http_method, api_group, api_action, name_o
 
   local req_header = gen_header(req_options, http_method, api_group, api_action, name_or_id, request)
   local req_body = request and request.body or nil
+  local docker_socket = open_socket(req_options)
 
-  return send_http_socket(req_options.socket_path, req_header, req_body, callback)
+  if docker_socket then
+    return send_http_socket(docker_socket, req_header, req_body, callback)
+  else
+    return {
+      headers = {code=497, message="bad socket path or host", protocol="HTTP/1.1"},
+      body = {message="can\'t connect to socket"}
+    }
+  end
 end
 
 local gen_api = function(_table, http_method, api_group, api_action)
@@ -329,7 +343,8 @@ gen_api(_docker, "POST", "images", "tag")
 gen_api(_docker, "DELETE", "images", "remove")
 gen_api(_docker, "GET", "images", "search")
 gen_api(_docker, "POST", "images", "prune")
--- TODO: build clear push commit export import
+gen_api(_docker, "GET", "images", "get")
+gen_api(_docker, "POST", "images", "load")
 
 gen_api(_docker, "GET", "networks", "list")
 gen_api(_docker, "GET", "networks", "inspect")
@@ -354,15 +369,18 @@ function _docker.new(options)
   local docker = {}
   local _options = options or {}
   docker.options = {
-    socket_path = _options.socket_path or "/var/run/docker.sock",
-    host = _options.host or "localhost",
+    socket_path = _options.socket_path or nil,
+    host = _options.socket_path and "localhost" or _options.host,
+    port = not _options.socket_path and _options.port or nil,
+    tls = _options.tls or nil,
+    tls_cacert = _options.tls and _options.tls_cacert or nil,
+    tls_cert = _options.tls and _options.tls_cert or nil,
+    tls_key = _options.tls and _options.tls_key or nil,
     version = _options.version or "v1.40",
     user_agent = _options.user_agent or "LuCI",
     protocol = _options.protocol or "HTTP/1.1",
-    -- status_enabled = _options.status_enabled or true,
-    -- status_path = _options.status_path or "/tmp/.docker_action_status",
     debug = _options.debug or false,
-    debug_path = _options.debug_path or "/tmp/.docker_debug"
+    debug_path = _options.debug and _options.debug_path or nil
   }
   setmetatable(
     docker,
