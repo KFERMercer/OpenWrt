@@ -24,8 +24,10 @@ function get_images()
     data[index]["_id"] = '<a href="javascript:new_tag(\''..v.Id:sub(8,20)..'\')" class="dockerman-link" title="'..translate("New tag")..'">' .. v.Id:sub(8,20) .. '</a>'
     if v.RepoTags and next(v.RepoTags)~=nil then
       for i, v1 in ipairs(v.RepoTags) do
-        data[index]["_tags"] =(data[index]["_tags"] and ( data[index]["_tags"] .. "<br\>" )or "") .. 
-        '<a href="javascript:un_tag(\''..v1..'\')" class="dockerman_link" title="'..translate("Remove tag")..'" >' .. v1 .. '</a>'
+        data[index]["_tags"] =(data[index]["_tags"] and ( data[index]["_tags"] .. "<br>" )or "") .. (v1:match("<none>") and v1 or ('<a href="javascript:un_tag(\''..v1..'\')" class="dockerman_link" title="'..translate("Remove tag")..'" >' .. v1 .. '</a>'))
+        if not data[index]["tag"] then
+          data[index]["tag"] = v1--:match("<none>") and nil or v1
+        end
       end
     else
       data[index]["_tags"] = v.RepoDigests[1] and v.RepoDigests[1]:match("^(.-)@.+")
@@ -53,35 +55,34 @@ m.template = "dockerman/cbi/xsimpleform"
 m.submit=false
 m.reset=false
 
-local pull_value={{_image_tag_name="", _registry="index.docker.io"}}
-local pull_section = m:section(Table,pull_value, translate("Pull Image"))
+local pull_value={_image_tag_name="", _registry="index.docker.io"}
+local pull_section = m:section(SimpleSection, translate("Pull Image"))
 pull_section.template="cbi/nullsection"
 local tag_name = pull_section:option(Value, "_image_tag_name")
 tag_name.template = "dockerman/cbi/inlinevalue"
 tag_name.placeholder="hello-world:latest"
-local registry = pull_section:option(Value, "_registry")
+local registry = pull_section:option(ListValue, "_registry")
+registry.default = "index.docker.io"
 registry.template = "dockerman/cbi/inlinevalue"
 registry:value("index.docker.io", "Docker Hub")
-registry:value("hub-mirror.c.163.com", "163 Mirror")
-registry:value("mirror.ccs.tencentyun.com", "Tencent Mirror")
-registry:value("docker.mirrors.ustc.edu.cn", "USTC Mirror")
+registry.forcewrite = true
 local action_pull = pull_section:option(Button, "_pull")
 action_pull.inputtitle= translate("Pull")
 action_pull.template = "dockerman/cbi/inlinebutton"
 action_pull.inputstyle = "add"
-tag_name.write = function(self, section,value)
+tag_name.write = function(self, section, value)
   local hastag = value:find(":")
   if not hastag then
     value = value .. ":latest"
   end
-  pull_value[section]["_image_tag_name"] = value
+  pull_value["_image_tag_name"] = value
 end
-registry.write = function(self, section,value)
-  pull_value[section]["_registry"] = value
+registry.write = function(self, section, value)
+  pull_value["_registry"] = value
 end
 action_pull.write = function(self, section)
-  local tag = pull_value[section]["_image_tag_name"]
-  local server = pull_value[section]["_registry"]
+  local tag = pull_value["_image_tag_name"]
+  local server = pull_value["_registry"]
   --去掉协议前缀和后缀
   local _,_,tmp = server:find(".-://([%.%w%-%_]+)")
   if not tmp then
@@ -89,17 +90,17 @@ action_pull.write = function(self, section)
   end
   local json_stringify = luci.jsonc and luci.jsonc.stringify
   if tag and tag ~= "" then
-    docker:clear_status()
-    docker:append_status("Images: " .. "pulling" .. " " .. tag .. "...")
+    docker:write_status("Images: " .. "pulling" .. " " .. tag .. "...\n")
     local x_auth = nixio.bin.b64encode(json_stringify({serveraddress= server}))
-    local res = dk.images:create({query = {fromImage=tag}, header={["X-Registry-Auth"] = x_auth}})
-    if res and res.code >=300 then
-      docker:append_status("fail code:" .. res.code.." ".. (res.body.message and res.body.message or res.message).. "<br>")
+    local res = dk.images:create({query = {fromImage=tag}, header={["X-Registry-Auth"] = x_auth}}, docker.pull_image_show_status_cb)
+    -- {"errorDetail": {"message": "failed to register layer: ApplyLayer exit status 1 stdout:  stderr: write \/docker: no space left on device" }, "error": "failed to register layer: ApplyLayer exit status 1 stdout:  stderr: write \/docker: no space left on device" }
+    if res and res.code == 200 and not res.body[#res.body].error and res.body[#res.body].status == "Status: Downloaded newer image for ".. tag then
+      docker:clear_status()
     else
-      docker:append_status("done<br>")
+      docker:append_status("code:" .. res.code.." ".. (res.body[#res.body].error or (res.body.message or res.message)).. "\n")
     end
   else
-    docker:append_status("fail code: 400 please input the name of image name!")
+    docker:append_status("code: 400 please input the name of image name!")
   end
   luci.http.redirect(luci.dispatcher.build_url("admin/services/docker/images"))
 end
@@ -132,7 +133,7 @@ local remove_action = function(force)
   for _, image_table_sid in ipairs(image_table_sids) do
     -- 得到选中项的名字
     if image_list[image_table_sid]._selected == 1 then
-      image_selected[#image_selected+1] = image_list[image_table_sid].id --image_id:cfgvalue(image_table_sid)
+      image_selected[#image_selected+1] = (image_list[image_table_sid]["_tags"]:match("<br>") or image_list[image_table_sid]["_tags"]:match("&lt;none&gt;")) and image_list[image_table_sid].id or image_list[image_table_sid].tag
     end
   end
   if next(image_selected) ~= nil then
@@ -144,10 +145,10 @@ local remove_action = function(force)
       if force then query = {force = true} end
       local msg = dk.images:remove({id = img, query = query})
       if msg.code ~= 200 then
-        docker:append_status("fail code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "<br>")
+        docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
         success = false
       else
-        docker:append_status("done<br>")
+        docker:append_status("done\n")
       end
     end
     if success then docker:clear_status() end
@@ -157,7 +158,8 @@ end
 
 local docker_status = m:section(SimpleSection)
 docker_status.template = "dockerman/apply_widget"
-docker_status.err=nixio.fs.readfile(dk.options.status_path)
+docker_status.err = docker:read_status()
+docker_status.err = docker_status.err and docker_status.err:gsub("\n","<br>"):gsub(" ","&nbsp;")
 if docker_status.err then docker:clear_status() end
 
 local action = m:section(Table,{{}})
@@ -218,11 +220,10 @@ btnsave.write = function (self, section)
         luci.ltn12.pump.all(chunk, luci.http.write)
       end
     end
-    docker:clear_status()
-    docker:append_status("Images: " .. "save" .. " " .. table.concat(image_selected, "<br/>") .. "...")
+    docker:write_status("Images: " .. "save" .. " " .. table.concat(image_selected, "\n") .. "...")
     local msg = dk.images:get({query = {names = names}}, cb)
     if msg.code ~= 200 then
-      docker:append_status("fail code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "<br>")
+      docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
       success = false
     else
       docker:clear_status()
