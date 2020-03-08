@@ -241,6 +241,9 @@ msgstr "Docker根目录"
 msgid "Index Server Address"
 msgstr "默认服务器地址"
 
+msgid "Registry Mirrors"
+msgstr "仓库镜像"
+
 msgid "Docker Socket Path"
 msgstr "Docker Socket 路径"
 
@@ -249,12 +252,6 @@ msgstr "Docker 操作状态临时文件路径"
 
 msgid "Where you want to save the docker status file"
 msgstr "保存docker status文件的位置"
-
-msgid "Enable WAN access Dokcer"
-msgstr "允许 WAN 访问 Dokcer"
-
-msgid "Enable WAN access docker mapped ports (need reload Docker-ce service)"
-msgstr "允许 WAN 访问本机 Dokcer 映射后的端口（易受攻击！）。<br /><br />如已更改此选项，需要点击应用并保存后重启docker服务。<br />推荐禁用该选项后，用系统防火墙选择性映射 172.17.0.X:XX 端口到 WAN"
 
 msgid "Enable Debug"
 msgstr "启用调试"
@@ -268,8 +265,23 @@ msgstr "调试临时文件路径"
 msgid "Where you want to save the debug tempfile"
 msgstr "保存调试临时文件的位置"
 
-msgid "Edit"
-msgstr "编辑"
+msgid "Log Level"
+msgstr "日志等级"
+
+msgid "Set the logging level"
+msgstr "设置日志等级"
+
+msgid "Enable WAN access"
+msgstr "允许 WAN 访问"
+
+msgid "Enable WAN access container mapped ports, if disable Docker will not allow to add IP masquerading rules"
+msgstr "允许 WAN 访问容器映射的端口, 如果禁用，Docker 将不被允许添加 MASQUERADE iptables 规则"
+
+msgid "Server Host"
+msgstr "服务端"
+
+msgid "Daemon unix socket (unix:///var/run/docker.sock) or TCP Remote Hosts (tcp://0.0.0.0:2375), default: unix:///var/run/docker.sock"
+msgstr "后台 Unix socket (unix:///var/run/docker.sock) 或 TCP 远程服务端 (tcp://0.0.0.0:2375)，默认: unix:///var/run/docker.sock"
 
 msgid "Stats"
 msgstr "状态"
