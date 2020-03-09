@@ -1,18 +1,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-lib-docker
-PKG_VERSION:=v0.3.1
+PKG_VERSION:=v0.3.2
 PKG_RELEASE:=beta
 PKG_MAINTAINER:=lisaac <https://github.com/lisaac/luci-lib-docker>
 PKG_LICENSE:=AGPL-3.0
-
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/lisaac/luci-lib-docker.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE:=$(PKG_SOURCE_SUBDIR)-$(PKG_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_SOURCE_SUBDIR)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -29,16 +21,12 @@ define Package/$(PKG_NAME)/description
 	Docker Engine API for LuCI
 endef
 
-define Build/Prepare
-	tar -xzvf $(DL_DIR)/$(PKG_SOURCE) -C $(BUILD_DIR)
-endef
-
 define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-rm -fr /tmp/luci-indexcache /tmp/luci-modulecache
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 endef
 
 define Package/$(PKG_NAME)/install

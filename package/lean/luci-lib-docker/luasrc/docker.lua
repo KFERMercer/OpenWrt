@@ -13,46 +13,42 @@ local chunksource = function(sock, buffer)
   buffer = buffer or ""
   return function()
     local output
-    local _, endp, count = buffer:find("^([0-9a-fA-F]+);?.-\r\n")
-    if not count then -- lua  ^ only match start of stirng，not start of line
-      _, endp, count = buffer:find("\r\n([0-9a-fA-F]+);?.-\r\n")
-    end
-    while not count do
+    local _, endp, count = buffer:find("^([0-9a-fA-F]+)\r\n")
+    if not count then
       local newblock, code = sock:recv(1024)
-      if not newblock then
-        return nil, code
-      end
+      if not newblock then return nil, code end
       buffer = buffer .. newblock
-      _, endp, count = buffer:find("^([0-9a-fA-F]+);?.-\r\n")
-      if not count then
-        _, endp, count = buffer:find("\r\n([0-9a-fA-F]+);?.-\r\n")
-      end
+      _, endp, count = buffer:find("^([0-9a-fA-F]+)\r\n")
     end
     count = tonumber(count, 16)
     if not count then
       return nil, -1, "invalid encoding"
     elseif count == 0 then -- finial
       return nil
-    elseif count + 2 <= #buffer - endp then
+    elseif count <= #buffer - endp then
+      --data >= count
       output = buffer:sub(endp + 1, endp + count)
-      buffer = buffer:sub(endp + count + 3) -- don't forget handle buffer
+      if count == #buffer - endp then          -- [data]
+        buffer = buffer:sub(endp + count + 1)
+        count, code = sock:recvall(2) --read \r\n
+        if not count then return nil, code end
+      elseif count + 1 == #buffer - endp then  -- [data]\r
+        buffer = buffer:sub(endp + count + 2)
+        count, code = sock:recvall(1) --read \n
+        if not count then return nil, code end
+      else                                     -- [data]\r\n[count]\r\n[data]...
+        buffer = buffer:sub(endp + count + 3) -- cut buffer
+      end
       return output
     else
+      -- data < count
       output = buffer:sub(endp + 1, endp + count)
-      buffer = ""
-      if count > #output then
-        local remain, code = sock:recvall(count - #output) --need read remaining
-        if not remain then
-          return nil, code
-        end
-        output = output .. remain
-        count, code = sock:recvall(2) --read \r\n
-      else
-        count, code = sock:recvall(count + 2 - #buffer + endp)
-      end
-      if not count then
-        return nil, code
-      end
+      buffer = buffer:sub(endp + count + 1)
+      local remain, code = sock:recvall(count - #output) --need read remaining
+      if not remain then return nil, code end
+      output = output .. remain
+      count, code = sock:recvall(2) --read \r\n
+      if not count then return nil, code end
       return output
     end
   end
