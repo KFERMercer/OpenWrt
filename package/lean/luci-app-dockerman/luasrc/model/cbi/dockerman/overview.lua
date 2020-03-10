@@ -138,8 +138,7 @@ if nixio.fs.access("/etc/config/dockerd") and nixio.fs.access("/usr/bin/dockerd"
   registry_mirrors.placeholder = "https://hub-mirror.c.163.com"
   local wan_enable = section_dockerd:option(Flag, "en_wan", translate("Enable WAN access"), translate("Enable WAN access container mapped ports"))
   wan_enable.enabled = "true"
-  wan_enable.disabled="false"
-  wan_enable.rmempty = false
+  wan_enable.rmempty = true
   local log_level = section_dockerd:option(ListValue, "log_level", translate("Log Level"), translate('Set the logging level'))
   log_level:value("debug", "debug")
   log_level:value("info", "info")
