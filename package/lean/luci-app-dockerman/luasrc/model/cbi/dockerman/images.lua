@@ -24,7 +24,7 @@ function get_images()
     data[index]["_id"] = '<a href="javascript:new_tag(\''..v.Id:sub(8,20)..'\')" class="dockerman-link" title="'..translate("New tag")..'">' .. v.Id:sub(8,20) .. '</a>'
     if v.RepoTags and next(v.RepoTags)~=nil then
       for i, v1 in ipairs(v.RepoTags) do
-        data[index]["_tags"] =(data[index]["_tags"] and ( data[index]["_tags"] .. "<br>" )or "") .. (v1:match("<none>") and v1 or ('<a href="javascript:un_tag(\''..v1..'\')" class="dockerman_link" title="'..translate("Remove tag")..'" >' .. v1 .. '</a>'))
+        data[index]["_tags"] =(data[index]["_tags"] and ( data[index]["_tags"] .. "<br>" )or "") .. ((v1:match("<none>") or (#v.RepoTags == 1)) and v1 or ('<a href="javascript:un_tag(\''..v1..'\')" class="dockerman_link" title="'..translate("Remove tag")..'" >' .. v1 .. '</a>'))
         if not data[index]["tag"] then
           data[index]["tag"] = v1--:match("<none>") and nil or v1
         end
@@ -80,10 +80,10 @@ action_pull.write = function(self, section)
     -- local x_auth = nixio.bin.b64encode(json_stringify({serveraddress= server})) , header={["X-Registry-Auth"] = x_auth}
     local res = dk.images:create({query = {fromImage=tag}}, docker.pull_image_show_status_cb)
     -- {"errorDetail": {"message": "failed to register layer: ApplyLayer exit status 1 stdout:  stderr: write \/docker: no space left on device" }, "error": "failed to register layer: ApplyLayer exit status 1 stdout:  stderr: write \/docker: no space left on device" }
-    if res and res.code == 200 and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. tag) then
+    if res and res.code == 200 and (res.body[#res.body] and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. tag)) then
       docker:clear_status()
     else
-      docker:append_status("code:" .. res.code.." ".. (res.body[#res.body].error or (res.body.message or res.message)).. "\n")
+      docker:append_status("code:" .. res.code.." ".. (res.body[#res.body] and res.body[#res.body].error or (res.body.message or res.message)).. "\n")
     end
   else
     docker:append_status("code: 400 please input the name of image name!")
