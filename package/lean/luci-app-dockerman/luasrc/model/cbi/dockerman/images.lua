@@ -91,9 +91,9 @@ action_pull.write = function(self, section)
   luci.http.redirect(luci.dispatcher.build_url("admin/services/docker/images"))
 end
 
-local import_section = m:section(SimpleSection, translate("Import Images"))
-local im = import_section:option(DummyValue, "_image_import")
-im.template = "dockerman/images_import"
+-- local import_section = m:section(SimpleSection, translate("Import Images"))
+-- local im = import_section:option(DummyValue, "_image_import")
+-- im.template = "dockerman/images_import"
 
 local image_table = m:section(Table, image_list, translate("Images"))
 

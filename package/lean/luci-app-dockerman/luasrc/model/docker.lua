@@ -308,23 +308,23 @@ end
 --{"status":"Downloading from https://downloads.openwrt.org/releases/19.07.0/targets/x86/64/openwrt-19.07.0-x86-64-generic-rootfs.tar.gz"}
 --{"status":"Importing","progressDetail":{"current":1572391,"total":3821714},"progress":"[====================\u003e                              ]  1.572MB/3.822MB"}
 --{"status":"sha256:d5304b58e2d8cc0a2fd640c05cec1bd4d1229a604ac0dd2909f13b2b47a29285"}
-_docker.import_image_show_status_cb = function(res, source)
-  return status_cb(res, source, function(chunk)
-    local json_parse = luci.jsonc.parse
-    local step = json_parse(chunk)
-    if type(step) == "table" then
-      local buf = _docker:read_status()
-      local num = 0
-      local str = '\t' .. (step.status and step.status or "") .. (step.progress and (" " .. step.progress) or "").."\n"
-      if step.status then buf, num = buf:gsub("\t"..step.status .. " .-\n", str) end
-      if num == 0 then
-        buf = buf .. str
-      end
-      _docker:write_status(buf)
-    end
-  end
-  )
-end
+-- _docker.import_image_show_status_cb = function(res, source)
+--   return status_cb(res, source, function(chunk)
+--     local json_parse = luci.jsonc.parse
+--     local step = json_parse(chunk)
+--     if type(step) == "table" then
+--       local buf = _docker:read_status()
+--       local num = 0
+--       local str = '\t' .. (step.status and step.status or "") .. (step.progress and (" " .. step.progress) or "").."\n"
+--       if step.status then buf, num = buf:gsub("\t"..step.status .. " .-\n", str) end
+--       if num == 0 then
+--         buf = buf .. str
+--       end
+--       _docker:write_status(buf)
+--     end
+--   end
+--   )
+-- end
 
 -- _docker.print_status_cb = function(res, source)
 --   return status_cb(res, source, function(step)

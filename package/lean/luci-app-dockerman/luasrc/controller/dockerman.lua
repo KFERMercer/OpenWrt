@@ -272,39 +272,39 @@ function load_images()
   luci.http.write_json({message = msg})
 end
 
-function import_images()
-  local src = luci.http.formvalue("src")
-  local itag = luci.http.formvalue("tag")
-  local dk = docker.new()
-  local ltn12 = require "luci.ltn12"
-  local rec_send = function(sinkout)
-    luci.http.setfilehandler(function (meta, chunk, eof)
-      if chunk then
-        ltn12.pump.step(ltn12.source.string(chunk), sinkout)
-      end
-    end)
-  end
-  docker:write_status("Images: importing".. " ".. itag .."...\n")
-  local repo = itag and itag:match("^([^:]+)")
-  local tag = itag and itag:match("^[^:]-:([^:]+)")
-  local res = dk.images:create({query = {fromSrc = src or "-", repo = repo or nil, tag = tag or nil }, body = not src and rec_send or nil}, docker.import_image_show_status_cb)
-  local msg = res and res.body and ( res.body.message )or nil
-  if not msg and #res.body == 0 then
-    -- res.body = {"status":"sha256:d5304b58e2d8cc0a2fd640c05cec1bd4d1229a604ac0dd2909f13b2b47a29285"}
-    msg = res.body.status or res.body.error
-  elseif not msg and #res.body >= 1 then
-    -- res.body = [...{"status":"sha256:d5304b58e2d8cc0a2fd640c05cec1bd4d1229a604ac0dd2909f13b2b47a29285"}]
-    msg = res.body[#res.body].status or res.body[#res.body].error
-  end
-  if res.code == 200 and msg and msg:match("sha256:") then
-    docker:clear_status()
-  else
-    docker:append_status("code:" .. res.code.." ".. msg)
-  end
-  luci.http.status(res.code, msg)
-  luci.http.prepare_content("application/json")
-  luci.http.write_json({message = msg})
-end
+-- function import_images()
+--   local src = luci.http.formvalue("src")
+--   local itag = luci.http.formvalue("tag")
+--   local dk = docker.new()
+--   local ltn12 = require "luci.ltn12"
+--   local rec_send = function(sinkout)
+--     luci.http.setfilehandler(function (meta, chunk, eof)
+--       if chunk then
+--         ltn12.pump.step(ltn12.source.string(chunk), sinkout)
+--       end
+--     end)
+--   end
+--   docker:write_status("Images: importing".. " ".. itag .."...\n")
+--   local repo = itag and itag:match("^([^:]+)")
+--   local tag = itag and itag:match("^[^:]-:([^:]+)")
+--   local res = dk.images:create({query = {fromSrc = src or "-", repo = repo or nil, tag = tag or nil }, body = not src and rec_send or nil}, docker.import_image_show_status_cb)
+--   local msg = res and res.body and ( res.body.message )or nil
+--   if not msg and #res.body == 0 then
+--     -- res.body = {"status":"sha256:d5304b58e2d8cc0a2fd640c05cec1bd4d1229a604ac0dd2909f13b2b47a29285"}
+--     msg = res.body.status or res.body.error
+--   elseif not msg and #res.body >= 1 then
+--     -- res.body = [...{"status":"sha256:d5304b58e2d8cc0a2fd640c05cec1bd4d1229a604ac0dd2909f13b2b47a29285"}]
+--     msg = res.body[#res.body].status or res.body[#res.body].error
+--   end
+--   if res.code == 200 and msg and msg:match("sha256:") then
+--     docker:clear_status()
+--   else
+--     docker:append_status("code:" .. res.code.." ".. msg)
+--   end
+--   luci.http.status(res.code, msg)
+--   luci.http.prepare_content("application/json")
+--   luci.http.write_json({message = msg})
+-- end
 
 function get_image_tags(image_id)
   if not image_id then 
