@@ -46,11 +46,13 @@ function get_containers()
     -- if image ~= nil then
     --   image=image:sub(1,12)
     -- end
-    
-    if v.Ports then
+    if v.Ports and next(v.Ports) ~= nil then
       data[index]["_ports"] = nil
       for _,v2 in ipairs(v.Ports) do
-        data[index]["_ports"] = (data[index]["_ports"] and (data[index]["_ports"] .. ", ") or "") .. (v2.PublicPort and (v2.PublicPort .. ":") or "")  .. (v2.PrivatePort and (v2.PrivatePort .."/") or "") .. (v2.Type and v2.Type or "")
+        data[index]["_ports"] = (data[index]["_ports"] and (data[index]["_ports"] .. ", ") or "")
+        .. ((v2.PublicPort and v2.Type and v2.Type == "tcp") and ('<a href="javascript:void(0);" onclick="window.open((window.location.origin.match(/^(.+):\\d+$/) && window.location.origin.match(/^(.+):\\d+$/)[1] || window.location.origin) + \':\' + '.. v2.PublicPort ..', \'_blank\');">') or "")
+        .. (v2.PublicPort and (v2.PublicPort .. ":") or "")  .. (v2.PrivatePort and (v2.PrivatePort .."/") or "") .. (v2.Type and v2.Type or "")
+        .. ((v2.PublicPort and v2.Type and v2.Type == "tcp")and "</a>" or "")
       end
     end
     for ii,iv in ipairs(images) do
@@ -98,6 +100,7 @@ container_ip = c_table:option(DummyValue, "_network", translate("Network"))
 container_ip.width="15%"
 container_ports = c_table:option(DummyValue, "_ports", translate("Ports"))
 container_ports.width="10%"
+container_ports.rawhtml = true
 container_image = c_table:option(DummyValue, "_image", translate("Image"))
 container_image.width="10%"
 container_command = c_table:option(DummyValue, "_command", translate("Command"))
@@ -160,6 +163,11 @@ btnstop.template = "dockerman/cbi/inlinebutton"
 btnstop.inputtitle=translate("Stop")
 btnstop.inputstyle = "reset"
 btnstop.forcewrite = true
+btnkill=action_section:option(Button, "_kill")
+btnkill.template = "dockerman/cbi/inlinebutton"
+btnkill.inputtitle=translate("Kill")
+btnkill.inputstyle = "reset"
+btnkill.forcewrite = true
 btnremove=action_section:option(Button, "_remove")
 btnremove.template = "dockerman/cbi/inlinebutton"
 btnremove.inputtitle=translate("Remove")
@@ -179,6 +187,9 @@ btnremove.write = function(self, section)
 end
 btnstop.write = function(self, section)
   start_stop_remove(m,"stop")
+end
+btnkill.write = function(self, section)
+  start_stop_remove(m,"kill")
 end
 
 return m

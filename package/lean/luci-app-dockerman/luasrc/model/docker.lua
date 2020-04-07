@@ -17,7 +17,6 @@ local update_image = function(self, image_name)
   if res and res.code == 200 and (#res.body > 0 and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. image_name)) then
     _docker:append_status("done\n")
   else
-    res.code = 500
     res.body.message = res.body[#res.body] and res.body[#res.body].error or (res.body.message or res.message)
   end
   new_image_id = self.images:inspect({name = image_name}).body.Id
@@ -66,13 +65,14 @@ local map_subtract = function(t1, t2)
       end
     end
     if not found then
-      if v1 and type(v1) == "table" then
-        if next(v1) == nil then 
-          res[k1] = { k = 'v' }
-        else
-          res[k1] = v1
-        end
-      end
+      res[k1] = v1
+      -- if v1 and type(v1) == "table" then
+      --   if next(v1) == nil then 
+      --     res[k1] = { k = 'v' }
+      --   else
+      --     res[k1] = v1
+      --   end
+      -- end
     end
   end
 
@@ -129,8 +129,8 @@ local get_config = function(container_config, image_config)
 
   -- handle hostconfig
   local host_config = old_host_config
-  if host_config.PortBindings and next(host_config.PortBindings) == nil then host_config.PortBindings = nil end
-  host_config.LogConfig = nil
+  -- if host_config.PortBindings and next(host_config.PortBindings) == nil then host_config.PortBindings = nil end
+  -- host_config.LogConfig = nil
   host_config.Mounts = {}
   -- for volumes
   for i, v in ipairs(container_config.Mounts) do
@@ -139,7 +139,7 @@ local get_config = function(container_config, image_config)
         Type = v.Type,
         Target = v.Destination,
         Source = v.Source:match("([^/]+)\/_data"),
-        BindOptions = v.Type == "bind" and {Propagation = v.Propagation} or nil,
+        BindOptions = (v.Type == "bind") and {Propagation = v.Propagation} or nil,
         ReadOnly = not v.RW
       })
     end
@@ -195,15 +195,13 @@ local upgrade = function(self, request)
 
   -- create new container
   _docker:append_status("Container: Create" .. " " .. container_name .. "...")
+  create_body = _docker.clear_empty_tables(create_body)
   res = self.containers:create({name = container_name, body = create_body})
   if res and res.code > 300 then return res end
   _docker:append_status("done\n")
 
   -- extra networks need to network connect action
   for k, v in pairs(extra_network) do
-    -- if v.IPAMConfig and next(v.IPAMConfig) == nil then v.IPAMConfig =nil end
-    -- if v.DriverOpts and next(v.DriverOpts) == nil then v.DriverOpts =nil end
-    -- if v.Aliases and next(v.Aliases) == nil then v.Aliases =nil end
     _docker:append_status("Networks: Connect" .. " " .. container_name .. "...")
     res = self.networks:connect({id = k, body = {Container = container_name, EndpointConfig = v}})
     if res.code > 300 then return res end
@@ -218,9 +216,6 @@ local duplicate_config = function (self, request)
   local container_info = self.containers:inspect({id = request.id})
   if container_info.code > 300 and type(container_info.body) == "table" then return nil end
   local old_image_id = container_info.body.Image
-  -- local old_config = container_info.body.Config
-  -- local old_host_config = container_info.body.HostConfig
-  -- local old_network_setting = container_info.body.NetworkSettings.Networks or {}
   local image_config = self.images:inspect({id = old_image_id}).body.Config
   return get_config(container_info.body, image_config)
 end
