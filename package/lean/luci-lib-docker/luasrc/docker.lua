@@ -1,3 +1,7 @@
+--[[
+LuCI - Lua Configuration Interface
+Copyright 2019 lisaac <https://github.com/lisaac/luci-lib-docker>
+]]--
 require "nixio.util"
 require "luci.util"
 local jsonc = require "luci.jsonc"
@@ -112,8 +116,10 @@ local send_http_socket = function(docker_socket, req_header, req_body, callback)
   elseif req_body and type(req_body) == "table" then
     -- json
     docker_socket:send(json_stringify(req_body))
+    if options.debug then io.popen("echo '".. json_stringify(req_body) .. "' >> " .. options.debug_path) end
   elseif req_body then
     docker_socket:send(req_body)
+    if options.debug then io.popen("echo '".. req_body .. "' >> " .. options.debug_path) end
   end
 
   local linesrc = docker_socket:linesource()
