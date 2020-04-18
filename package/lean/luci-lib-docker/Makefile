@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-lib-docker
-PKG_VERSION:=v0.3.2
-PKG_RELEASE:=beta
+PKG_VERSION:=v0.3.3
+PKG_RELEASE:=1
 PKG_MAINTAINER:=lisaac <https://github.com/lisaac/luci-lib-docker>
 PKG_LICENSE:=AGPL-3.0
 
@@ -31,7 +31,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
-	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci/
+	cp -pR $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
