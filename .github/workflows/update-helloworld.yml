@@ -1,7 +1,7 @@
 #
 # This is free software, lisence use MIT.
 # 
-# Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+# Copyright (C) 2020 KFERMercer <KFER.Mercer@gmail.com>
 # 
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
@@ -37,14 +37,14 @@ jobs:
 
     - name: Load latest helloworld
       run: |
-        git clone https://github.com/fw876/helloworld --depth=1
-        cp -rf ./helloworld/luci-app-ssr-plus ./package/lean/
+        git clone https://github.com/fw876/helloworld.git --depth=1 ./tmp/helloworld
+        cp -rf ./tmp/helloworld/luci-app-ssr-plus ./package/lean/
 
     - name: Apply commit changes
       run: |
         git add ./package/lean/luci-app-ssr-plus/
-        echo -e "[bot] luci-app-ssr-plus: update\n\nlatest commit: $(cat ./helloworld/.git/refs/heads/master)" > ./message
-        git commit -F ./message 1>/dev/null
+        echo -e "[bot] luci-app-ssr-plus: update\n\nlatest commit: $(cat ./tmp/helloworld/.git/refs/heads/master)" > ./tmp/message
+        git commit -F ./tmp/message
 
     - name: Push Commits
       run: git push origin master
