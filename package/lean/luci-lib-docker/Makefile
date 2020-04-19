@@ -31,7 +31,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
-	cp -pR $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
+	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
