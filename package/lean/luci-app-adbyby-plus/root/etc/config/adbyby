@@ -8,4 +8,5 @@ config adbyby
 	option wan_mode '1'
 	option mem_mode '1'
 	option update_source '1'
+	list subscribe_url 'https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf'
 

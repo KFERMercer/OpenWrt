@@ -48,7 +48,7 @@ add_cron()
 {
 	if [ $cron_mode -eq 1 ]; then
     sed -i '/adblock.sh/d' $CRON_FILE
-		echo '0 6 * * * /usr/share/adbyby/adblock.sh > /tmp/adupdate.log 2>&1' >> $CRON_FILE
+		echo '0 4 * * * /usr/share/adbyby/adblock.sh > /tmp/adupdate.log 2>&1' >> $CRON_FILE
 		crontab $CRON_FILE
 	fi
 }
