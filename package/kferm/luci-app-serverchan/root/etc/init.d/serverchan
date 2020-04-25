@@ -3,8 +3,13 @@
 START=99
 STOP=10
 
-start() {	
-	/usr/bin/serverchan/serverchan &
+start() {
+	state=`pgrep -f "/usr/bin/serverchan/serverchan"`
+	if [ ! -z "$state" ]; then
+		restart
+	else
+		/usr/bin/serverchan/serverchan &
+	fi
 	echo "serverchan is starting now ..."
 }
 
@@ -17,4 +22,5 @@ restart(){
 	stop
 	sleep 1
 	start
-} 
+	echo "restarted."
+}
