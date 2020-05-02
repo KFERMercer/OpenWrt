@@ -41,7 +41,7 @@ jobs:
     - name: Apply commit changes
       run: |
         sed -i "1c [bot] AutoMerging: merge all upstream's changes:" ./.git/MERGE_MSG
-        git commit || exit 0
+        git commit --allow-empty --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" || exit 0
 
     - name: Push Commits
       env:
