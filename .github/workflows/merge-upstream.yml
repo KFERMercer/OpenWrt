@@ -36,7 +36,12 @@ jobs:
         git config --global user.name "KFERMercer"
 
     - name: Load upstream commits
-      run: git pull https://github.com/coolsnowwolf/lede.git --no-edit
+      run: git pull https://github.com/coolsnowwolf/lede.git --log --no-commit
+
+    - name: Apply commit changes
+      run: |
+        sed -i "1c [bot] AutoMerging: merge all upstream's changes:" ./.git/MERGE_MSG
+        git commit || exit 0
 
     - name: Push Commits
       env:
