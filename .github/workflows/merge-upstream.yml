@@ -43,7 +43,7 @@ jobs:
         mkdir ./tmp && cp ./.git/MERGE_MSG ./tmp/message
         sed -i "1c [bot] AutoMerging: merge all upstream's changes:" ./tmp/message
         sed -i '/^\#.*/d' ./tmp/message
-        git commit --allow-empty --file="./tmp/message" --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" || exit 0
+        git commit --file="./tmp/message" --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" || exit 0
 
     - name: Push Commits
       env:
