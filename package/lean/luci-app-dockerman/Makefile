@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=Docker Manager interface for LuCI
 LUCI_DEPENDS:=+luci-lib-docker +docker-ce +e2fsprogs +fdisk +ttyd
 PKG_NAME:=luci-app-dockerman
-PKG_VERSION:=v0.5.11
+PKG_VERSION:=v0.5.12
 PKG_RELEASE:=leanmod
 PKG_MAINTAINER:=lisaac <https://github.com/lisaac/luci-app-dockerman>
 PKG_LICENSE:=AGPL-3.0
