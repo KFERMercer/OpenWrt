@@ -9,7 +9,7 @@ CPU_SUBTYPE:=neon-vfpv4
 MAINTAINER:=John Crispin <john@phrozen.org>
 
 # TODO: drop kmod-usb-dwc3-of-simple when migrating to 4.19
-KERNEL_PATCHVER:=4.14
+KERNEL_PATCHVER:=4.19
 
 KERNELNAME:=zImage Image dtbs
 
@@ -19,7 +19,7 @@ DEFAULT_PACKAGES += \
 	kmod-leds-gpio kmod-gpio-button-hotplug swconfig \
 	kmod-ath10k wpad-openssl \
 	kmod-usb3 kmod-usb-dwc3 ath10k-firmware-qca4019 \
-	automount autosamba luci-app-ipsec-vpnd luci-app-zerotier ddns-scripts_aliyun ca-certificates \
-	htop fdisk e2fsprogs
+	automount autosamba luci-app-ipsec-vpnd luci-app-cpufreq luci-app-zerotier ddns-scripts_aliyun ca-certificates \
+	htop fdisk e2fsprogs ethtool
 
 $(eval $(call BuildTarget))
