@@ -15,7 +15,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=shortcut-fe
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -64,7 +64,7 @@ define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" \
 		$(KERNEL_MAKE_FLAGS) \
 		$(PKG_MAKE_FLAGS) \
-		SUBDIRS="$(PKG_BUILD_DIR)" \
+		M="$(PKG_BUILD_DIR)" \
 		EXTRA_CFLAGS="$(EXTRA_CFLAGS)" \
 		SFE_SUPPORT_IPV6=1 \
 		modules
