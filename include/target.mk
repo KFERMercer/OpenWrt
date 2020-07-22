@@ -18,7 +18,7 @@ block-mount coremark kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw wget
 default-settings luci luci-app-ddns luci-app-upnp luci-app-autoreboot luci-app-webadmin \
 luci-app-filetransfer luci-app-vsftpd \
 luci-app-arpbind luci-app-vlmcsd luci-app-wol \
-luci-app-sfe luci-app-nlbwmon luci-app-cpufreq \
+luci-app-sfe luci-app-nlbwmon luci-app-accesscontrol luci-app-cpufreq \
 ddns-scripts_aliyun ddns-scripts_dnspod
 # For the basic set
 DEFAULT_PACKAGES.basic:=
