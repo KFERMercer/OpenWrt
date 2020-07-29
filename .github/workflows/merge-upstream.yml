@@ -13,7 +13,7 @@ on:
     - cron: 30 19 * * *
   # push:
   #   branches: 
-  #     - master
+  #     - main
 
 jobs:
 
@@ -24,7 +24,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@main
       with:
         ref: master
         fetch-depth: 0
