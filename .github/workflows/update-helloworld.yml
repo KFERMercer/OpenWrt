@@ -21,7 +21,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
       with:
         ref: master
         fetch-depth: 0
@@ -29,8 +29,8 @@ jobs:
 
     - name: Set git identity
       run : |
-        git config --global user.email "KFER.Mercer@gmail.com"
-        git config --global user.name "KFERMercer"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
 
     - name: Load latest helloworld
       run: |
@@ -44,4 +44,6 @@ jobs:
         git commit --file="./tmp/message" || exit 0
 
     - name: Push Commits
-      run: git push origin master
+      env:
+        DOWNSTREAM_BRANCH: master
+      run: git push origin $DOWNSTREAM_BRANCH
