@@ -80,6 +80,7 @@ jobs:
 
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
+             find ./bin/packages/ -name "*ssr-plus*" | xargs -i mv -f {} ./artifact/
 
       - name: Upload artifact
         uses: actions/upload-artifact@main
