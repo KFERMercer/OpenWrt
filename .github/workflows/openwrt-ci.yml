@@ -95,17 +95,17 @@ jobs:
           name: OpenWrt_buildinfo
           path: ./artifact/buildinfo/
 
-      - name: Output firmware
-        uses: actions/upload-artifact@v2
-        with:
-          name: OpenWrt_firmware
-          path: ./bin/targets/
-
       - name: Output package
         uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_package
           path: ./artifact/package/
+
+      - name: Output firmware
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenWrt_firmware
+          path: ./bin/targets/
 
       - name: Upload release asset
         if: github.event == 'release'
