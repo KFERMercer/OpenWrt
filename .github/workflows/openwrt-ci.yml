@@ -19,6 +19,8 @@ jobs:
 
   build:
 
+    name: Build OpenWrt firmware
+
     runs-on: ubuntu-latest
 
     if: github.event.repository.owner.id == github.event.sender.id
@@ -86,22 +88,22 @@ jobs:
           mkdir -p ./artifact/buildinfo
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
-          cp -rf $(find ./bin/packages/ -type f -name "luci-*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
-      - name: Output buildinfo
+      - name: Deliver buildinfo
         uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_buildinfo
           path: ./artifact/buildinfo/
 
-      - name: Output package
+      - name: Deliver package
         uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_package
           path: ./artifact/package/
 
-      - name: Output firmware
+      - name: Deliver firmware
         uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_firmware
