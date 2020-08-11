@@ -2,7 +2,8 @@
 
 git clone https://github.com/fw876/helloworld --depth=1 ./tmp/helloworld
 cp -rf ./tmp/helloworld/luci-app-ssr-plus ./package/lean/
-git add ./package/lean/luci-app-ssr-plus/
+cp -rf ./tmp/helloworld/tcping ./package/lean/
+git add ./package/lean/luci-app-ssr-plus/ ./package/lean/tcping/
 echo "luci-app-ssr-plus: update\n\nlatest commit: $(cat ./tmp/helloworld/.git/refs/heads/master)" > ./tmp/helloworld/message
 git commit -F ./tmp/helloworld/message
 rm -rf ./tmp
