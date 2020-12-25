@@ -20,7 +20,7 @@ KERNELNAME:=bzImage
 include $(INCLUDE_DIR)/target.mk
 
 DEFAULT_PACKAGES += partx-utils mkf2fs fdisk e2fsprogs wpad kmod-usb-hid \
-kmod-rt2800-usb kmod-e1000e kmod-igb kmod-ixgbe kmod-pcnet32 kmod-tulip kmod-vmxnet3 kmod-i40e kmod-r8125 kmod-8139cp kmod-8139too kmod-mlx4-core kmod-fs-f2fs \
+kmod-rt2800-usb kmod-e1000e kmod-igb kmod-igc kmod-ixgbe kmod-pcnet32 kmod-tulip kmod-vmxnet3 kmod-i40e kmod-r8125 kmod-8139cp kmod-8139too kmod-mlx4-core kmod-fs-f2fs \
 htop lm-sensors autocore-x86 automount autosamba luci-app-ipsec-vpnd luci-proto-bonding luci-app-zerotier ddns-scripts_aliyun ddns-scripts_dnspod ca-certificates \
 kmod-ath5k kmod-ath9k kmod-ath9k-htc kmod-ath10k ath10k-firmware-qca988x ath10k-firmware-qca9888 ath10k-firmware-qca9984 brcmfmac-firmware-43602a1-pcie \
 kmod-sound-hda-core kmod-sound-hda-codec-realtek kmod-sound-hda-codec-via kmod-sound-via82xx kmod-sound-hda-intel kmod-sound-hda-codec-hdmi kmod-sound-i8x0 kmod-usb-audio \
