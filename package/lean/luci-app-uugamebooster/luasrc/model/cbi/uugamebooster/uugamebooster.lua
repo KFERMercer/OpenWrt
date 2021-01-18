@@ -12,4 +12,13 @@ o = s:option(Flag, "enabled", translate("Enable"))
 o.default = 0
 o.optional = false
 
+function o.write(self, section, value)
+	if value == "1" then
+		luci.sys.call("/etc/init.d/uugamebooster start >/dev/null && /etc/init.d/uugamebooster enable >/dev/null")
+	else
+		luci.sys.call("/etc/init.d/uugamebooster stop >/dev/null && /etc/init.d/uugamebooster disable >/dev/null")
+	end
+	return Flag.write(self, section, value)
+end
+
 return mp
