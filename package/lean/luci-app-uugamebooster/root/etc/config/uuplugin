@@ -1,4 +1,4 @@
 
-config uuplugin 'uuplugin'
+config uugamebooster 'uugamebooster'
 	option enabled '0'
 

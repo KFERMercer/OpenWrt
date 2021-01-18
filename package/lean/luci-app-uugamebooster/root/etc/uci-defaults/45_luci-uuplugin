@@ -1,9 +1,9 @@
 #!/bin/sh
 
 uci -q batch <<-EOF >/dev/null
-	delete ucitrack.@uuplugin[-1]
-	add ucitrack uuplugin
-	set ucitrack.@uuplugin[-1].init=uuplugin
+	delete ucitrack.@uugamebooster[-1]
+	add ucitrack uugamebooster
+	set ucitrack.@uugamebooster[-1].init=uugamebooster
 	commit ucitrack
 EOF
 
