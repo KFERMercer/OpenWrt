@@ -21,4 +21,6 @@ function o.write(self, section, value)
 	return Flag.write(self, section, value)
 end
 
+mp:section(SimpleSection).template  = "uugamebooster/uugamebooster_qrode"
+
 return mp

@@ -10,7 +10,8 @@ LUCI_DEPENDS:=+uugamebooster
 LUCI_PKGARCH:=all
 PKG_NAME:=luci-app-uugamebooster
 PKG_VERSION:=1.0
-PKG_RELEASE:=5
+PKG_RELEASE:=8k
+PKG_MAINTAINER:=KFERMercer Modified
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
