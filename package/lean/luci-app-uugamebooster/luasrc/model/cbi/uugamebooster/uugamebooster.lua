@@ -9,7 +9,7 @@ s.anonymous=true
 s.addremove=false
 
 o = s:option(Flag, "enabled", translate("Enable"))
-o.default = 0
+o.default = 1
 o.optional = false
 
 function o.write(self, section, value)
@@ -21,6 +21,6 @@ function o.write(self, section, value)
 	return Flag.write(self, section, value)
 end
 
-mp:section(SimpleSection).template  = "uugamebooster/uugamebooster_qrode"
+mp:section(SimpleSection).template  = "uugamebooster/uugamebooster_qrcode"
 
 return mp
