@@ -35,11 +35,11 @@ jobs:
     - name: Load latest helloworld
       run: |
         git clone https://github.com/fw876/helloworld.git --depth=1 ./tmp/helloworld
-        cp -rf ./tmp/helloworld/luci-app-ssr-plus ./package/lean/
-        cp -rf ./tmp/helloworld/tcping ./package/lean/
-        cp -rf ./tmp/helloworld/naiveproxy ./package/lean/
-        cp -rf ./tmp/helloworld/ipt2socks-alt ./package/lean/
-        cp -rf ./tmp/helloworld/xray ./package/lean/
+        rm -rf ./package/lean/luci-app-ssr-plus && cp -rf ./tmp/helloworld/luci-app-ssr-plus ./package/lean/
+        rm -rf ./package/lean/tcping && cp -rf ./tmp/helloworld/tcping ./package/lean/
+        rm -rf ./package/lean/naiveproxy && cp -rf ./tmp/helloworld/naiveproxy ./package/lean/
+        rm -rf ./package/lean/ipt2socks-alt && cp -rf ./tmp/helloworld/ipt2socks-alt ./package/lean/
+        rm -rf ./package/lean/xray && cp -rf ./tmp/helloworld/xray ./package/lean/
 
     - name: Apply commit changes
       run: |
