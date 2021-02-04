@@ -38,11 +38,11 @@ jobs:
         rm -rf ./package/lean/luci-app-ssr-plus && cp -rf ./tmp/helloworld/luci-app-ssr-plus ./package/lean/
         rm -rf ./package/lean/tcping && cp -rf ./tmp/helloworld/tcping ./package/lean/
         rm -rf ./package/lean/naiveproxy && cp -rf ./tmp/helloworld/naiveproxy ./package/lean/
-        rm -rf ./package/lean/xray && cp -rf ./tmp/helloworld/xray ./package/lean/
+        rm -rf ./package/lean/xray-core && cp -rf ./tmp/helloworld/xray-core ./package/lean/
 
     - name: Apply commit changes
       run: |
-        git add ./package/lean/luci-app-ssr-plus/ ./package/lean/tcping/ ./package/lean/naiveproxy/ ./package/lean/xray/
+        git add ./package/lean/luci-app-ssr-plus/ ./package/lean/tcping/ ./package/lean/naiveproxy/ ./package/lean/xray-core/
         echo -e "[bot] luci-app-ssr-plus: update\n\nlatest commit: $(cat ./tmp/helloworld/.git/refs/heads/master)" > ./tmp/message
         git commit --file="./tmp/message" || exit 0
 
