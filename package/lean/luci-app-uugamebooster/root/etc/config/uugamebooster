@@ -1,4 +1,4 @@
 
 config uugamebooster 'uugamebooster'
-	option enabled '0'
+	option enabled '1'
 
