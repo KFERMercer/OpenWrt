@@ -4,16 +4,16 @@
 # This is free software, licensed under the GNU General Public License v3.
 #
 
-# 
+#
 # to get the latest version & md5 checksum:
 # curl -L -s -k -H "Accept:text/plain" "http://router.uu.163.com/api/plugin?type=openwrt-$(UU_ARCH)"
-# 
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uugamebooster
 PKG_VERSION:=v2.7.8
-PKG_RELEASE:=1
+PKG_RELEASE:=6
 
 include $(INCLUDE_DIR)/package.mk
 
