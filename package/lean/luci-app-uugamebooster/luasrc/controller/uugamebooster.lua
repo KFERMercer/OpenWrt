@@ -5,7 +5,7 @@ function index()
 		return
 	end
 
-	entry({"admin", "services", "uugamebooster"}, cbi("uugamebooster/uugamebooster"), ("UU GameAcc"), 99).dependent = true
+	entry({"admin", "services", "uugamebooster"}, cbi("uugamebooster/uugamebooster"), ("UU Game Booster"), 99).dependent = true
 	entry({"admin", "services", "uugamebooster", "status"}, call("act_status")).leaf = true
 end
 
