@@ -19,6 +19,7 @@ DEFAULT_PACKAGES += \
 	kmod-ath10k wpad-openssl \
 	kmod-usb3 kmod-usb-dwc3 ath10k-firmware-qca4019 \
 	autocore-arm automount autosamba luci-app-ipsec-vpnd luci-app-cpufreq luci-app-zerotier \
-	htop fdisk e2fsprogs ethtool
+	htop fdisk e2fsprogs ethtool \
+	-luci-app-flowoffload luci-app-sfe
 
 $(eval $(call BuildTarget))
