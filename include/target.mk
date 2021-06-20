@@ -12,7 +12,6 @@ DEVICE_TYPE?=router
 # Default packages - the really basic set
 DEFAULT_PACKAGES:=\
 	base-files \
-	ca-bundle \
 	dropbear \
 	fstools \
 	libc \
@@ -52,8 +51,7 @@ DEFAULT_PACKAGES.router:=\
 	default-settings luci luci-app-ddns luci-app-upnp luci-app-autoreboot \
 	luci-app-filetransfer luci-app-vsftpd \
 	luci-app-arpbind luci-app-vlmcsd luci-app-wol \
-	luci-app-flowoffload luci-app-nlbwmon luci-app-accesscontrol luci-app-cpufreq \
-	ddns-scripts_aliyun ddns-scripts_dnspod
+	luci-app-flowoffload luci-app-nlbwmon luci-app-accesscontrol luci-app-cpufreq
 
 ifneq ($(DUMP),)
   all: dumpinfo
