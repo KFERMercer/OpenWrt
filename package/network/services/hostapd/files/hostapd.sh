@@ -93,7 +93,7 @@ hostapd_common_add_device_config() {
 	config_add_array supported_rates
 	config_add_string beacon_rate
 
-	config_add_string country
+	config_add_string country country3
 	config_add_boolean country_ie doth
 	config_add_boolean spectrum_mgmt_required
 	config_add_int local_pwr_constraint
@@ -119,7 +119,7 @@ hostapd_prepare_device_config() {
 
 	local base_cfg=
 
-	json_get_vars country country_ie beacon_int:100 dtim_period:2 doth require_mode legacy_rates \
+	json_get_vars country country3 country_ie beacon_int:100 dtim_period:2 doth require_mode legacy_rates \
 		acs_chan_bias local_pwr_constraint spectrum_mgmt_required airtime_mode cell_density \
 		rts_threshold beacon_rate rssi_reject_assoc_rssi rssi_ignore_probe_request maxassoc
 
@@ -134,6 +134,7 @@ hostapd_prepare_device_config() {
 
 	[ -n "$country" ] && {
 		append base_cfg "country_code=$country" "$N"
+		[ -n "$country3" ] && append base_cfg "country3=$country3" "$N"
 
 		[ "$country_ie" -gt 0 ] && {
 			append base_cfg "ieee80211d=1" "$N"
@@ -262,6 +263,8 @@ hostapd_common_add_bss_config() {
 	config_add_int acct_port
 	config_add_int acct_interval
 
+	config_add_int bss_load_update_period chan_util_avg_period
+
 	config_add_string dae_client
 	config_add_string dae_secret
 	config_add_int dae_port
@@ -319,6 +322,7 @@ hostapd_common_add_bss_config() {
 	config_add_array supported_rates
 
 	config_add_boolean sae_require_mfp
+	config_add_int sae_pwe
 
 	config_add_string 'owe_transition_bssid:macaddr' 'owe_transition_ssid:string'
 
@@ -520,7 +524,7 @@ hostapd_set_bss_options() {
 		macfilter ssid utf8_ssid wmm uapsd hidden short_preamble rsn_preauth \
 		iapp_interface eapol_version dynamic_vlan ieee80211w nasid \
 		acct_server acct_secret acct_port acct_interval \
-		bss_load_update_period chan_util_avg_period sae_require_mfp \
+		bss_load_update_period chan_util_avg_period sae_require_mfp sae_pwe \
 		multi_ap multi_ap_backhaul_ssid multi_ap_backhaul_key skip_inactivity_poll \
 		airtime_bss_weight airtime_bss_limit airtime_sta_weight \
 		multicast_to_unicast proxy_arp per_sta_vif \
@@ -604,6 +608,7 @@ hostapd_set_bss_options() {
 		;;
 	esac
 	[ -n "$sae_require_mfp" ] && append bss_conf "sae_require_mfp=$sae_require_mfp" "$N"
+	[ -n "$sae_pwe" ] && append bss_conf "sae_pwe=$sae_pwe" "$N"
 
 	local vlan_possible=""
 
