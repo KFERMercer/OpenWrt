@@ -50,8 +50,7 @@ DEFAULT_PACKAGES.router:=\
 	default-settings luci luci-app-ddns luci-app-upnp luci-app-autoreboot \
 	luci-app-filetransfer luci-app-vsftpd luci-app-arpbind \
 	luci-app-vlmcsd luci-app-wol \
-	luci-app-flowoffload luci-app-nlbwmon luci-app-accesscontrol luci-app-cpufreq \
-  ddns-scripts_aliyun ddns-scripts_dnspod
+	luci-app-turboacc luci-app-nlbwmon luci-app-accesscontrol ddns-scripts_aliyun ddns-scripts_dnspod
 
 ifneq ($(DUMP),)
   all: dumpinfo
