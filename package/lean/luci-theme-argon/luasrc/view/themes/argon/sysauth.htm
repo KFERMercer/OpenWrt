@@ -88,7 +88,7 @@
 	if (bgcount == 0 ) then
 		local http = require "luci.sys"
 		local json = require "luci.jsonc"
-		local bg_url = media .. "/img/bg1.jpg"
+		local bg_url = media .. "/background/bg1.jpg"
 		local bing = http.httpget("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US")
 		if (bing and bing ~= '') then
 			local bingjson  = json.parse(bing)
