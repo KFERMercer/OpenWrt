@@ -23,6 +23,12 @@ define Build/edimax-header
 	@mv $@.new $@
 endef
 
+define Build/prepare-ea8350-factory
+	$(STAGING_DIR_HOST)/bin/addfwhdr-e8350 -i $@ -o $@.hdr
+	$(STAGING_DIR_HOST)/bin/addpattern-e8350 -i $@.hdr -o $@ -s -g
+	rm -rf $@.hdr
+endef
+
 define Device/Default
 	PROFILES := Default
 	KERNEL_DEPENDS = $$(wildcard $(DTS_DIR)/$$(DEVICE_DTS).dts)
@@ -173,6 +179,24 @@ define Device/linksys_ea7500-v1
 	DEVICE_PACKAGES := -kmod-ath10k-ct kmod-ath10k-ct-smallbuffers ath10k-firmware-qca99x0-ct luci-app-advanced-reboot
 endef
 TARGET_DEVICES += linksys_ea7500-v1
+
+define Device/linksys_e8350-v1
+	$(call Device/LegacyImage)
+	DEVICE_VENDOR := Linksys
+	DEVICE_MODEL := E8350
+	DEVICE_VARIANT := v1
+	SOC := qcom-ipq8064
+	FW_VERSION := v1.0.03.003
+	FW_DEVICE_ID := 8350
+	PAGESIZE := 2048
+	BLOCKSIZE := 128k
+	KERNEL_IN_UBI := 1
+	IMAGES = factory.bin sysupgrade.bin
+	IMAGE/sysupgrade.bin := append-ubi | check-size 0x04000000 | append-metadata
+	IMAGE/factory.bin := append-ubi | check-size 0x04000000 | prepare-ea8350-factory
+	DEVICE_PACKAGES := ath10k-firmware-qca988x-ct
+endef
+TARGET_DEVICES += linksys_e8350-v1
 
 define Device/linksys_ea8500
 	$(call Device/LegacyImage)
