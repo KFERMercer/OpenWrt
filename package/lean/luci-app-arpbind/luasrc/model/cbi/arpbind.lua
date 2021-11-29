@@ -1,5 +1,3 @@
-
-
 local sys = require "luci.sys"
 local ifaces = sys.net:devices()
 
