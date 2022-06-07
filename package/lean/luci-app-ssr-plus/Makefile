@@ -8,7 +8,6 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy \
-	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_PDNSD \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Redsocks2 \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SagerNet_Core \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Client \
@@ -26,12 +25,11 @@ LUCI_PKGARCH:=all
 LUCI_DEPENDS:= \
 	@(PACKAGE_libustream-mbedtls||PACKAGE_libustream-openssl||PACKAGE_libustream-wolfssl) \
 	+coreutils +coreutils-base64 +dns2socks +dns2tcp +dnsmasq-full +ipset +kmod-ipt-nat \
-	+ip-full +iptables +iptables-mod-tproxy +lua +libuci-lua +luci-lib-ipkg +microsocks \
-	+tcping +resolveip +shadowsocksr-libev-ssr-check +uclient-fetch \
+	+ip-full +iptables +iptables-mod-tproxy +lua +libuci-lua +microsocks +tcping \
+	+resolveip +shadowsocksr-libev-ssr-check +uclient-fetch \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun:kcptun-client \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks:ipt2socks \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy:naiveproxy \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_PDNSD:pdnsd-alt \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_Redsocks2:redsocks2 \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_SagerNet_Core:curl \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_SagerNet_Core:sagernet-core \
@@ -48,21 +46,19 @@ LUCI_DEPENDS:= \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin:v2ray-plugin
 
 define Package/$(PKG_NAME)/config
+select PACKAGE_luci-lib-ipkg if PACKAGE_$(PKG_NAME)
+
 config PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun
 	bool "Include Kcptun"
-	default n
-
-config PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy
-	bool "Include NaiveProxy"
-	depends on !(arc||armeb||mips||mips64||powerpc||TARGET_gemini)
 	default n
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks
 	bool "Include ipt2socks"
 	default n
 
-config PACKAGE_$(PKG_NAME)_INCLUDE_PDNSD
-	bool "Include PDNSD"
+config PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy
+	bool "Include NaiveProxy"
+	depends on !(arc||armeb||mips||mips64||powerpc||TARGET_gemini)
 	default n
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_Redsocks2
